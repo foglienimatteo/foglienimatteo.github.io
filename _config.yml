@@ -21,6 +21,7 @@ author: Matteo Foglieni
 
 navbar-links:
   About Me: "aboutme"
+  Publications: "publications"
   Resources:
     - Beautiful Jekyll: "https://beautifuljekyll.com"
     - Learn markdown: "https://www.markdowntutorial.com/"
@@ -245,7 +246,7 @@ footer-hover-col: "#0085A1"
 ################
 
 # Ruby Date Format to show dates of posts
-date_format: "%B %-d, %Y"
+date_format: "%d %B %Y"
 
 # Facebook App ID
 #fb_app_id: ""
