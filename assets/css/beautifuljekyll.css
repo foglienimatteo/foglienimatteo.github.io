@@ -34,23 +34,23 @@ p {
 }
 h1,h2,h3,h4,h5,h6 {
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight: 8000; #800
+  font-weight: 8000; /*800*/
   line-height: 1.1;
 }
 h1 {
-  font-size: 0.1rem; /*2.25rem;*/
+  font-size: 2rem;
 }
 h2 {
-  font-size: 0.2rem; /*1.875rem;*/
+  font-size: 1.7rem; /*1.875rem;*/
 }
 h3 {
-  font-size: 0.3rem; /*1.5rem;*/
+  font-size: 1.4rem;
 }
 h4 {
-  font-size: 0.4rem; /*1.125rem;*/
+  font-size: 1.125rem;
 }
 h1, h2, h3, h4 {
-  margin-top: 0.5rem; /*1.25rem;*/
+  margin-top: 1.25rem;
 }
 a {
   color: {{ site.link-col | default: "#008AFF" }};
@@ -67,7 +67,7 @@ blockquote p:first-child {
   margin-top: 0;
 }
 hr.small {
-  max-width: 6.25rem;
+  max-width: 12rem; /*6.25rem;*/
   margin: 1rem auto;
   border-width: 0.25rem;
   border-color: inherit;
