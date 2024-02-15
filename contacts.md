@@ -1,7 +1,8 @@
 ---
 layout: page 
 title: Contacts
-cover-img: "./assets/img/LRZ/LRZ-2011-10-03-klein.jpg"
+#cover-img: "./assets/img/LRZ/LRZ-2011-10-03-klein.jpg"
+cover-img: "./assets/img/LRZ/LRZ-2011-10-03.jpg"
 ---
 
 
