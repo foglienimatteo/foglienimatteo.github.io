@@ -30,3 +30,4 @@ title: About me
 - 2011 - 2016 : High School Diploma, Liceo Scientifico Statale Lorenzo Mascheroni (Bergamo, IT)
   &emsp; Grade: 100/100
 
+dcs
