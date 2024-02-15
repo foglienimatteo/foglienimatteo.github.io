@@ -14,9 +14,9 @@ title: About me
 ## Education
 
 - 09/2019 - 07/2022 : Master's Degree in Physics<br>
-  University: University of Milan - Physics Department (Milan, IT)<br>
-  Title: _"The Galaxy Number Counts in General Relativity: implications for Primordial Non-Gaussianities"_ <br> 
-  Supervisor: Prof. Emanuele Castorina<br>
+  &nbsp; University: University of Milan - Physics Department (Milan, IT)<br>
+  &ensp;  Title: _"The Galaxy Number Counts in General Relativity: implications for Primordial Non-Gaussianities"_ <br> 
+  &emsp; Supervisor: Prof. Emanuele Castorina<br>
   Assistant Supervisor: Prof. Luigi Guzzo
 
 - 09/2016 - 12/2019 : Bachelor's Degree in Physics<br>
