@@ -27,7 +27,6 @@ title: About me
   &emsp; Assistant Supervisor: Dr. Ben Granett<br>
   &emsp; Grade: 110/110 cum laude
 
-- 2011 - 2016 : High School Diploma, Liceo Scientifico Statale Lorenzo Mascheroni (Bergamo, IT)
+- 2011 - 2016 : High School Diploma, Liceo Scientifico Statale Lorenzo Mascheroni (Bergamo, IT)<br>
   &emsp; Grade: 100/100
 
-dcs
