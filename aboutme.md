@@ -1,6 +1,7 @@
 ---
 layout: page
 title: About me
+full-width: true
 #subtitle: Why you'd want to go on a date with me
 ---
 
