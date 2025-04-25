@@ -121,11 +121,11 @@ author:
     Physics-based educated guy converted to computer science. 
     Currently working at the Leibniz Supercomputing Centre in Munich (DE), 
     mainly with K8s and containers on Openstack cloud. Julia enthusiast.
-  location         : "Garching"
+  location         : "Garching bei München, DE"
   email            :
   links:
-    - label: "Garching bei München"
-      icon: "fas fa-fw fa-map-marker-alt"
+    #- label: "Garching bei München"
+    #  icon: "fas fa-fw fa-map-marker-alt"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/foglienimatteo"
@@ -344,8 +344,8 @@ defaults:
       type: posts
     values:
       layout: single
-      author_profile: true
+      author_profile: false
       read_time: true
       comments: # true
-      share: true
+      share: false
       related: true

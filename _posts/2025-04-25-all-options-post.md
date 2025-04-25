@@ -9,21 +9,22 @@ tags:
   - Post Formats
   - readability
   - standard
+toc: true   # Table-Of-Content
+toc_label: "Table of Contents"
+toc_icon: "cog"
+header:
+  image: /assets/images/LRZ/LRZ-2011-10-03-mit-FMI.jpg
+  caption: "Photo credit: Veronika Hohenegger and the Leibniz Supercomputing Centre"
+  overlay_filter: 0.5 # same as adding an opacity of 0.5 to a black background
+  actions:
+    - label: "More Info"
+      url: "https://lrz.de"
 # link: https://github.com
 ---
 
 
 
 # All options of Posts 
-
-- [All options of Posts](#all-options-of-posts)
-    - [Introduction](#introduction)
-    - [last\_modified\_at](#last_modified_at)
-    - [excerpt\_separator](#excerpt_separator)
-    - [Link](#link)
-    - [Quotes](#quotes)
-    - [Notice](#notice)
-      - [New Site Features](#new-site-features)
 
 <br>
 <br>
