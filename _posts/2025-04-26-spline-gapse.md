@@ -19,13 +19,39 @@ toc_icon: "cog"
 
 # MySpline
 
-I am recently working on the parallelisation over GPUs of the Julia code I wrote in my Master thesis, [GaPSE.jl](https://github.com/foglienimatteo/GaPSE.jl).
+As a side project, I was working together with my colleague [Salvatore Cielo](https://www.linkedin.com/in/salvo-cielo-a561992b2/) on the parallelisation of the Julia code I wrote in my Master thesis, [GaPSE.jl](https://github.com/foglienimatteo/GaPSE.jl).
+
+After some research, I find out a package, [KernelAbstractions.jl](https://github.com/JuliaGPU/KernelAbstractions.jl), that allows to write kernels architecture agnostic, i.e. that work on CPUs and on every major GPU backend (`Metal.jl`, `CUDA.jl`, `oneAPI.jl` and `AMDGPU.jl`) 
+
+As a MWE:
+
+```julia
+# Equivalent sintazes are available in oneAPI, Metal and AMDGPU
+using CUDA, KernelAbstractions, Test
+const backend = CUDA.CUDABackend()
+const DevArray = CuArray
+
+a = ones(1024)
+dev_a = DevArray(a)
+dev_b = similar(dev_a)
+
+@kernel function my_kernel!(b, a, num)
+    i = @index(Global, Linear)
+    b[i] = a[i] + num
+end
+
+compiled_kernel! = my_kernel!(backend, 32)   # 32 is the group size
+compiled_kernel!(dev_b, dev_a, 2; ndrange=sizeof(dev_a))
+
+b = Array(dev_b)    
+@test all(b.≈3)
+```
 
 In doing so, I discovered that I couldn't offload to the GPU the `Dierckx` splines I was using.
-As an interesting exercise and with the help of my wonderful colleague @ivan-pi, I decided to try to implement the code for 1D Splines from scratch.
+As an interesting exercise and with the help of my wonderful colleague [Ivan Pribec](https://github.com/ivan-pi), I decided to try to implement the code for 1D Splines from scratch.
 
 
-The mathematical procedure I implemented in GaPSE is based on: Parviz Moin, _"Fundamentals of Engineering Numerical Analysis"_ (2010), Cambridge University Press: Second edition, Chapter 1.2, "Cubic Spline Interpolation"
+The mathematical procedure I implemented in GaPSE.jl is based on: Parviz Moin, _"Fundamentals of Engineering Numerical Analysis"_ (2010), Cambridge University Press, Second edition, Chapter 1.2 (_"Cubic Spline Interpolation"_)
 
 <br>
 <br>
@@ -40,12 +66,12 @@ The mathematical procedure I implemented in GaPSE is based on: Parviz Moin, _"Fu
 
 ## Derivation of the equation system for the cubic spline
 
-Let us suppose to have a set of $N$ data points $(x_i, y_i), \forall i=1,...,N$ that we want
+Let us suppose to have a set of $N$ data points $(x\_i, y\_i), \forall i=1,...,N$ that we want
 to use to create our cubic spline.
-Let $g(x)$ be the cubic in the interval $x_i \leq x \leq x_{i+1}$ and let $g(x)$ denote the
+Let $g(x)$ be the cubic in the interval $x\_i \leq x \leq x\_{i+1}$ and let $g(x)$ denote the
 collection of all the cubics for the entire range of x. Since $g$ is piecewise cubic,
-its second derivative $g^{''}$ is piecewise linear. 
-For the interval $x_i \leq x \leq x_{i+1}$, we
+its second derivative $g^{\'\'}$ is piecewise linear. 
+For the interval $x\_i \leq x \leq x\_{i+1}$, we
 can then write the equation for the corresponding straight line as
 
 $$
@@ -66,8 +92,9 @@ $$
 
 where $\Delta_i = x_{i+1} - x_i$.
 
-The $g^{''}(x_i)$ are the $N$ unknowns, and applying the continuity of the first derivative condition 
-$g^{'}_i(x_i) = g^{'}_{i-1}(x_i) \, , \forall i=2,...,N-1$, we get
+
+The $g^{\'\'}(x_i)$ are the $N$ unknowns, and applying the continuity of the first derivative condition 
+$g^{\'}\_i(x_i) = g^{\'}\_{i-1}(x_i) \, , \forall i=2,...,N-1$, we get
 
 $$
 \frac{\Delta_{i-1}}{6}g^{''}(x_{i-1}) + 
@@ -78,12 +105,12 @@ $$
 
 We have then $N-2$ equations for $N$ unknowns. The remaining ones are the "end conditions" that one may want to apply.
 The most common ones are:
-- Free run-out or Natural spline: $g^{''}(x_1)=g^{''}(x_N)=0$
+- Free run-out or Natural spline: $g^{\'\'}(x\_1)=g^{\'\'}(x\_N)=0$
   - most commonly used;
-  - this spline is the smoothest interpolant (i.e. $\int_{x_1}^{x_N}g^{''2}(x)\, \mathrm{d}x$ is the smallest possible)
-- Parabolic run-out: $g^{''}(x_1)=g^{''}(x_2) \, , \; g^{''}(x_{N-1}) = g^{''}(x_N)$
+  - this spline is the smoothest interpolant (i.e. $\int_{x_1}^{x_N}g^{\'\'2}(x)\, \mathrm{d}x$ is the smallest possible)
+- Parabolic run-out: $g^{\'\'}(x\_1)=g^{\'\'}(x\_2) \, , \; g^{\'\'}(x\_{N-1}) = g^{\'\'}(x\_N)$
   - the interpolating polynomials in the first and last intervals are parabolas rather than cubics
-- Combination of the first two: $g^{''}(x_1)=\alpha \ g^{''}(x_2) \, , \; g^{''}(x_{N-1}) = \beta \ g^{''}(x_N)$
+- Combination of the first two: $g^{\'\'}(x\_1)=\alpha \ g^{\'\'}(x\_2) \, , \;\; g^{\'\'}(x\_{N-1}) = \beta \ g^{\'\'}(x\_N)$
 - Third Derivative continuity: for this look at the appropriate section
 
 Using the coefficients $c_1$, $a_N$, $b_1$, $b_N$, $d_1$ and $d_N$ for this Initial Conditions (IC), we can write the complete set of equation in the matrix form:
@@ -351,6 +378,6 @@ D_i &= \frac{g^{''}(x_{i+1})-g^{''}(x_i)}{6\Delta_i} \\[10pt]
 \end{split}
 $$
 
-NOTE: the coefficients $B_i$, $C_i$ and $D_i$ are $3(N-1)$ tuples! We defined $C_N$ just to get rid of $g^{''}(x_N)$ and write $B_i$ and $D_i$ in function of $C_i$ only. However, that $C_N$ has no importance after the recursive computation, and you can get rid of it.
+NOTE: the coefficients $B_i$, $C_i$ and $D_i$ are $3(N-1)$ tuples! We defined $C_N$ just to get rid of $g^{\'\'}(x_N)$ and write $B_i$ and $D_i$ in function of $C_i$ only. However, that $C_N$ has no importance after the recursive computation, and you can get rid of it.
 
 
