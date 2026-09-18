@@ -12,7 +12,7 @@
 
 set -euo pipefail
 
-WIDTH=1400
+WIDTH=900
 QUALITY=82
 
 if [ $# -ne 1 ]; then

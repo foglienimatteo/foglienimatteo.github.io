@@ -35,10 +35,20 @@
   }
 }
 
-/* No sidebar rendered => `.page` is #main's first element child. */
+/* No author sidebar => `.page` is #main's first element child. */
 #main > .page:first-child {
   @include breakpoint($large) {
     width: 100%;
+  }
+}
+
+/* No table of contents => nothing is ever painted in the right gutter.
+   Written as :has() rather than the inverse so that a browser without :has()
+   simply keeps the gutter, which is the theme's own behaviour, instead of
+   dropping the TOC on top of the text. */
+#main:not(:has(.sidebar__right)) .page {
+  @include breakpoint($large) {
+    padding-inline-end: 0;
   }
 }
 
@@ -65,10 +75,10 @@
 /*
    Measure and vertical rhythm
    --------------------------------------------------------------------------
-   Running prose is capped at a readable line length. Everything that is
-   genuinely wide - display math, code blocks, figures, tables - is left
-   uncapped and uses the full reclaimed column, so a \begin{cases} block gets
-   ~1100px instead of overflowing a 636px one.
+   Running prose is capped at a readable line length and centred in the
+   column. Everything that is genuinely wide - display math, code blocks,
+   figures, tables - is left uncapped, so it breaks out symmetrically on both
+   sides of the prose instead of overflowing a 636px column.
 */
 .page__content {
   line-height: 1.7;
@@ -85,6 +95,7 @@
   > h5,
   > h6 {
     max-width: $content-measure;
+    margin-inline: auto;
   }
 
   p {
@@ -96,6 +107,17 @@
   h3,
   h4 {
     margin-top: 2.4em;
+  }
+}
+
+/* Scoped to .page__inner-wrap (the `single` layout) so that archive titles
+   stay left-aligned with the post entries underneath them. */
+.page__inner-wrap {
+  .page__title,
+  .page__meta,
+  .page__share {
+    max-width: $content-measure;
+    margin-inline: auto;
   }
 }
 
@@ -126,8 +148,9 @@ mjx-container[display="true"] {
 */
 .pdf-embed {
   display: block;
-  max-width: 34em;
-  margin: 1.5em 0 2.5em;
+  width: fit-content; /* border hugs the image at whatever aspect it has */
+  max-width: 100%;
+  margin: 1.5em auto 2.5em;
 
   &__preview {
     display: block;
@@ -143,8 +166,9 @@ mjx-container[display="true"] {
 
     img {
       display: block;
-      width: 100%;
-      height: auto;
+      width: auto;
+      max-width: 100%;
+      max-height: $pdf-preview-height;
       margin-bottom: 0; /* theme puts 1em under figure img */
       border-radius: 0;
     }
