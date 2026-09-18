@@ -23,8 +23,10 @@ layout: single
 
 - June 2025: _"Parallelizing GaPSE.jl with KernelAbstractions.jl"_,  **Platform for Advanced Scientific Computing (PASC25)** conference, FHNW Campus Brugg-Windisch, Switzerland
 
+- June 2026: poster _"Rethinking Compute Platforms: When Cloud Can Replace HPC, and When It Cannot"_, with E. Birang, P. Dobrev, B. Emrem, P. Ganta and F. Jamitzky, **ISC High Performance (ISC26)**, Hamburg, Germany
+
 {% include pdf-embed.html
-     pdf="/assets/posters/2025-06-pasc25-poster.pdf"
-     image="/assets/posters/2025-06-pasc25-poster.jpg"
-     alt="PASC25 poster: Parallelizing GaPSE.jl with KernelAbstractions.jl"
-     caption="PASC25, FHNW Brugg-Windisch, June 2025" %}
+     pdf="/assets/posters/ISC26_Poster_V5.0_FINAL.pdf"
+     image="/assets/posters/ISC26_Poster_V5.0_FINAL.jpg"
+     alt="ISC26 poster: Rethinking Compute Platforms - When Cloud Can Replace HPC, and When It Cannot"
+     caption="ISC High Performance 2026" %}

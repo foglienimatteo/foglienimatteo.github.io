@@ -2,14 +2,14 @@ Posters and other PDFs shown as a preview card on /Publications/.
 
 To add one:
 
-1. drop the PDF here, e.g. `2025-06-pasc25-poster.pdf`
-2. `bin/pdf-preview assets/posters/2025-06-pasc25-poster.pdf`
-   (writes `2025-06-pasc25-poster.jpg` next to it)
+1. drop the PDF here, e.g. `ISC26_Poster.pdf`
+2. `bin/pdf-preview assets/posters/ISC26_Poster.pdf`
+   (writes `ISC26_Poster.jpg` next to it)
 3. reference both from `_pages/Work.md`:
 
        {% include pdf-embed.html
-            pdf="/assets/posters/2025-06-pasc25-poster.pdf"
-            image="/assets/posters/2025-06-pasc25-poster.jpg"
+            pdf="/assets/posters/ISC26_Poster.pdf"
+            image="/assets/posters/ISC26_Poster.jpg"
             alt="..."
             caption="..." %}
 

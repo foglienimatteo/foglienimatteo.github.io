@@ -13,9 +13,11 @@ search: false
 // imports below.
 // ---------------------------------------------------------------------------
 
-// Stock is 1280px, which on a wide screen leaves the article stranded in the
-// middle third of the window once the sidebar gutters are subtracted.
-$max-width: 1440px;
+// Both sidebar gutters are now dropped when nothing is in them (see
+// _sass/custom.scss), so the theme's 1280px frame is filled rather than
+// leaving a void to the right of the text.
+$max-width: 1280px;
+$right-sidebar-width: 280px;
 
 // Stock ladder is 16 / 18 / 20 / 22px. 22px body text in a 636px column is
 // what made the text feel cramped; flatten it so the measure does the work.
@@ -24,9 +26,12 @@ $doc-font-size-medium: 18px;
 $doc-font-size-large: 18px;
 $doc-font-size-x-large: 19px;
 
-// Line length for running prose. Display math, code, figures and tables are
-// deliberately NOT capped to this - see _sass/custom.scss.
-$content-measure: 38em;
+// Line length for running prose: 42rem is ~800px / ~88 characters at the
+// x-large font size. This is the one knob for "too thin" / "too wide".
+// rem, not em: em resolves against each element's OWN font-size, so the same
+// value would cap an h1 at more than twice the width of a paragraph.
+// Display math, code, figures and tables are deliberately NOT capped to it.
+$content-measure: 42rem;
 
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 @import "minimal-mistakes"; // main partials
