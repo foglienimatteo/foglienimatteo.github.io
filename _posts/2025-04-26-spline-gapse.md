@@ -16,7 +16,6 @@ toc_icon: "cog"
 ---
 
 
-
 # MySpline
 
 As a side project, I was working together with my colleague [Salvatore Cielo](https://www.linkedin.com/in/salvo-cielo-a561992b2/) on the parallelisation of the Julia code I wrote in my Master thesis, [GaPSE.jl](https://github.com/foglienimatteo/GaPSE.jl).
@@ -52,17 +51,6 @@ As an interesting exercise and with the help of my wonderful colleague [Ivan Pri
 
 
 The mathematical procedure I implemented in GaPSE.jl is based on: Parviz Moin, _"Fundamentals of Engineering Numerical Analysis"_ (2010), Cambridge University Press, Second edition, Chapter 1.2 (_"Cubic Spline Interpolation"_)
-
-<br>
-<br>
-<br>
-<br>
-<br>
-
-
-
-
-
 
 ## Derivation of the equation system for the cubic spline
 
@@ -116,7 +104,6 @@ The most common ones are:
 Using the coefficients $c_1$, $a_N$, $b_1$, $b_N$, $d_1$ and $d_N$ for this Initial Conditions (IC), we can write the complete set of equation in the matrix form:
 
 
-
 $$
 \begin{bmatrix}
     b_1 & c_1 & 0 & \cdots & \cdots & 0 \\[5pt]
@@ -141,19 +128,6 @@ $$
     d_N
 \end{bmatrix}
 $$
-
-<br>
-<br>
-<br>
-<br>
-<br>
-
-
-
-
-
-
-
 
 ## Apply the TDMA 
 
@@ -333,19 +307,6 @@ $$
 g^{''}(x_N) = \frac{\delta_N}{\beta_N} = \tilde{\delta}_N\\[10pt]
 g^{''}(x_i) = \frac{\delta_i - \gamma_i\, g^{''}(x_{i+1})}{\beta_i} = \tilde{\delta}_i - \tilde{\gamma}_i\, g^{''}(x_{i+1})
 $$
-
-<br>
-<br>
-<br>
-<br>
-<br>
-
-
-
-
-
-
-
 
 ## Final spline polynomial coefficients 
 

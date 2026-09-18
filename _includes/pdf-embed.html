@@ -1,0 +1,49 @@
+{%- comment -%}
+  Clickable preview of a PDF: a raster of page 1 that opens the real PDF full
+  page in a new tab.
+
+      {% include pdf-embed.html
+           pdf="/assets/posters/2025-06-pasc25-poster.pdf"
+           image="/assets/posters/2025-06-pasc25-poster.jpg"
+           alt="PASC25 poster: Parallelizing GaPSE.jl with KernelAbstractions.jl"
+           caption="PASC25, Brugg-Windisch, June 2025" %}
+
+  Generate `image` from `pdf` with:  bin/pdf-preview <path-to-pdf>
+
+  Why a static image and not an <object>/<iframe> of the PDF itself:
+    - iOS Safari and Android Chrome will not render a PDF inline; they show a
+      blank box or a download prompt (this is why /CV/ is unusable on a phone);
+    - an embedded PDF viewer swallows pointer events, so wrapping it in an <a>
+      does not actually give you click-to-open.
+  A JPEG is a fraction of the size, renders everywhere, and the click target
+  behaves. GitHub Pages serves .pdf as `Content-Type: application/pdf`, so the
+  link opens the browser's own viewer full page instead of downloading.
+
+  Renders nothing at all while `pdf` is not in the repo, so the page never
+  shows a broken image before the file has been added.
+{%- endcomment -%}
+
+{%- assign pdf_present = false -%}
+{%- for file in site.static_files -%}
+  {%- if file.path == include.pdf -%}
+    {%- assign pdf_present = true -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- if pdf_present -%}
+<figure class="pdf-embed">
+  <a class="pdf-embed__preview"
+     href="{{ include.pdf | relative_url }}"
+     target="_blank" rel="noopener"
+     aria-label="{{ include.alt | default: 'Open the PDF' | escape }} (opens full page)">
+    <img src="{{ include.image | relative_url }}"
+         alt="{{ include.alt | default: '' | escape }}"
+         loading="lazy" decoding="async">
+  </a>
+  <figcaption>
+    {%- if include.caption %}{{ include.caption }} &middot; {% endif -%}
+    <a href="{{ include.pdf | relative_url }}" target="_blank" rel="noopener">open full page (PDF)</a>
+  </figcaption>
+</figure>
+{%- endif -%}
