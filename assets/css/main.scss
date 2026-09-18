@@ -33,6 +33,10 @@ $doc-font-size-x-large: 19px;
 // Display math, code, figures and tables are deliberately NOT capped to it.
 $content-measure: 42rem;
 
+// Height of an embedded PDF preview card. Capped by HEIGHT, not width, so a
+// portrait A0 poster and a landscape slide both come out a sensible size.
+$pdf-preview-height: 24rem;
+
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 @import "minimal-mistakes"; // main partials
 @import "custom"; // site-specific overrides, loaded last so it wins

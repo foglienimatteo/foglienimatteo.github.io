@@ -148,7 +148,8 @@ mjx-container[display="true"] {
 */
 .pdf-embed {
   display: block;
-  max-width: 34rem;
+  width: fit-content; /* border hugs the image at whatever aspect it has */
+  max-width: 100%;
   margin: 1.5em auto 2.5em;
 
   &__preview {
@@ -165,8 +166,9 @@ mjx-container[display="true"] {
 
     img {
       display: block;
-      width: 100%;
-      height: auto;
+      width: auto;
+      max-width: 100%;
+      max-height: $pdf-preview-height;
       margin-bottom: 0; /* theme puts 1em under figure img */
       border-radius: 0;
     }
