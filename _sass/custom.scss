@@ -1,0 +1,157 @@
+/* ==========================================================================
+   Site-specific overrides
+   Loaded after the theme, so it wins on equal specificity.
+   ========================================================================== */
+
+/*
+   Reclaim the dead sidebar gutters
+   --------------------------------------------------------------------------
+   From $large up, `.page` (_page.scss) and `.archive` (_archive.scss) both
+   give away $right-sidebar-width TWICE: `float: inline-end` +
+   `width: calc(100% - 300px)` reserves the left column for the author
+   sidebar, and `padding-inline-end: 300px` reserves the right column for the
+   table of contents. With `box-sizing: border-box` that is 600px gone.
+
+   But _includes/sidebar.html only emits `.sidebar` when `author_profile` or
+   `page.sidebar` is set, and only _layouts/single.html ever emits the
+   `.sidebar__right` TOC. So on posts and on the pages with
+   `author_profile: false` the left 300px is empty, and on archive layouts the
+   right 300px is. At a 1440px window that squeezed the article into a 636px
+   column - narrower than the same page gets at 1023px, just before the
+   breakpoint fires.
+
+   All of this lives at $large and above, so none of it touches phones.
+*/
+
+/*
+   A wider window deserves wider side gutters than the theme's flat 1em.
+   #main and the masthead are padded together so the site title stays aligned
+   with the article title.
+*/
+#main,
+.masthead__inner-wrap {
+  @include breakpoint($large) {
+    padding-inline: 2em;
+  }
+}
+
+/* No sidebar rendered => `.page` is #main's first element child. */
+#main > .page:first-child {
+  @include breakpoint($large) {
+    width: 100%;
+  }
+}
+
+/* Archive layouts never render a TOC, so their right gutter is always dead. */
+.archive {
+  @include breakpoint($large) {
+    padding-inline-end: 0;
+  }
+
+  /* ...which also means the grid view no longer needs to hang into it. */
+  .grid__wrapper {
+    @include breakpoint($large) {
+      margin-inline-end: 0;
+    }
+  }
+
+  /* Keep post entries at the same measure as prose rather than letting them
+     stretch across the width just reclaimed above. */
+  .archive__item {
+    max-width: $content-measure;
+  }
+}
+
+/*
+   Measure and vertical rhythm
+   --------------------------------------------------------------------------
+   Running prose is capped at a readable line length. Everything that is
+   genuinely wide - display math, code blocks, figures, tables - is left
+   uncapped and uses the full reclaimed column, so a \begin{cases} block gets
+   ~1100px instead of overflowing a 636px one.
+*/
+.page__content {
+  line-height: 1.7;
+
+  > p,
+  > ul,
+  > ol,
+  > dl,
+  > blockquote,
+  > h1,
+  > h2,
+  > h3,
+  > h4,
+  > h5,
+  > h6 {
+    max-width: $content-measure;
+  }
+
+  p {
+    margin-bottom: 1.4em;
+  }
+
+  /* Stock is 2em 0 0.5em; give sections a bit more air above them. */
+  h2,
+  h3,
+  h4 {
+    margin-top: 2.4em;
+  }
+}
+
+/*
+   Display math must never widen the page
+   --------------------------------------------------------------------------
+   The wide `cases` blocks in the cubic-spline post are ~1000px at this font
+   size and used to force horizontal scroll of the whole document on a phone.
+   Scroll the equation instead.
+
+   `.MathJax_Display` is MathJax 2 (what _includes/scripts.html loads today);
+   `mjx-container[display="true"]` is MathJax 3/4, covered so this survives an
+   upgrade of that script.
+*/
+.MathJax_Display,
+mjx-container[display="true"] {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: 0.4em; /* room for the scrollbar, so it never clips glyphs */
+}
+
+/*
+   PDF preview cards - see _includes/pdf-embed.html
+   --------------------------------------------------------------------------
+   `display: block` undoes the theme's flex `figure` (_base.scss), which would
+   otherwise try to sit the preview and its caption side by side.
+*/
+.pdf-embed {
+  display: block;
+  max-width: 34em;
+  margin: 1.5em 0 2.5em;
+
+  &__preview {
+    display: block;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    background-color: #fff;
+    overflow: hidden;
+
+    &:hover,
+    &:focus-visible {
+      border-color: $primary-color;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin-bottom: 0; /* theme puts 1em under figure img */
+      border-radius: 0;
+    }
+  }
+
+  figcaption {
+    margin-top: 0.6em;
+    margin-bottom: 0;
+  }
+}

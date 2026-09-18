@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+#
+# Render page 1 of a PDF to a web-sized JPEG beside it, for use with
+# {% include pdf-embed.html %}.
+#
+#     bin/pdf-preview assets/posters/2025-06-pasc25-poster.pdf
+#     -> assets/posters/2025-06-pasc25-poster.jpg
+#
+# Needs one of: pdftoppm (poppler-utils), magick / convert (ImageMagick).
+#   macOS:  brew install poppler
+#   Debian: sudo apt install poppler-utils
+
+set -euo pipefail
+
+WIDTH=1400
+QUALITY=82
+
+if [ $# -ne 1 ]; then
+  echo "usage: $(basename "$0") <file.pdf>" >&2
+  exit 2
+fi
+
+pdf=$1
+[ -f "$pdf" ] || { echo "no such file: $pdf" >&2; exit 1; }
+out=${pdf%.pdf}
+
+if command -v pdftoppm >/dev/null 2>&1; then
+  pdftoppm -jpeg -jpegopt "quality=$QUALITY" -scale-to-x "$WIDTH" -scale-to-y -1 \
+           -f 1 -l 1 -singlefile "$pdf" "$out"
+elif command -v magick >/dev/null 2>&1; then
+  magick -density 150 "$pdf[0]" -background white -flatten \
+         -resize "${WIDTH}x" -quality "$QUALITY" "$out.jpg"
+elif command -v convert >/dev/null 2>&1; then
+  convert -density 150 "$pdf[0]" -background white -flatten \
+          -resize "${WIDTH}x" -quality "$QUALITY" "$out.jpg"
+else
+  echo "need pdftoppm or ImageMagick; see the header of $0" >&2
+  exit 1
+fi
+
+echo "wrote $out.jpg ($(du -h "$out.jpg" | cut -f1))"

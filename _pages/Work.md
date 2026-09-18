@@ -17,22 +17,14 @@ layout: single
 - B. Friedman-Shaw, A. Krolewski, M. Foglieni, N. Afshordi: _"Doppler bias: impact of peculiar velocities on color selection and the large scale structure of galaxy surveys"_ (2025), Journal of Cosmology and Astroparticle Physics, DOI [10.1088/1475-7516/2025/03/059](https://iopscience.iop.org/article/10.1088/1475-7516/2025/03/059) (arXiv [2410.04705](https://arxiv.org/abs/2410.04705))
 
 
-<br>
-<br>
-<br>
-<br>
-<br>
-
-
-
-
-
-
 ## Talks and Conferences
 
 - Oct 2023 (online): _"SPHEREx talk: Large Scale Limit of the Observed Galaxy Power Spectrum"_, invited by Dr. Henry S. Gebhardt and the SPHEREx team from **Caltech University (California, USA)**
 
 - June 2025: _"Parallelizing GaPSE.jl with KernelAbstractions.jl"_,  **Platform for Advanced Scientific Computing (PASC25)** conference, FHNW Campus Brugg-Windisch, Switzerland
-  
 
-
+{% include pdf-embed.html
+     pdf="/assets/posters/2025-06-pasc25-poster.pdf"
+     image="/assets/posters/2025-06-pasc25-poster.jpg"
+     alt="PASC25 poster: Parallelizing GaPSE.jl with KernelAbstractions.jl"
+     caption="PASC25, FHNW Brugg-Windisch, June 2025" %}

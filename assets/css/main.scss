@@ -5,5 +5,29 @@ search: false
 
 @charset "utf-8";
 
+// ---------------------------------------------------------------------------
+// Theme variable overrides.
+//
+// Every Minimal Mistakes variable is declared with `!default`, so anything set
+// here wins over _sass/minimal-mistakes/_variables.scss. Must come BEFORE the
+// imports below.
+// ---------------------------------------------------------------------------
+
+// Stock is 1280px, which on a wide screen leaves the article stranded in the
+// middle third of the window once the sidebar gutters are subtracted.
+$max-width: 1440px;
+
+// Stock ladder is 16 / 18 / 20 / 22px. 22px body text in a 636px column is
+// what made the text feel cramped; flatten it so the measure does the work.
+$doc-font-size: 17px;
+$doc-font-size-medium: 18px;
+$doc-font-size-large: 18px;
+$doc-font-size-x-large: 19px;
+
+// Line length for running prose. Display math, code, figures and tables are
+// deliberately NOT capped to this - see _sass/custom.scss.
+$content-measure: 38em;
+
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 @import "minimal-mistakes"; // main partials
+@import "custom"; // site-specific overrides, loaded last so it wins
