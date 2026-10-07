@@ -1,0 +1,60 @@
+{%- comment -%}
+  Full-size viewer for a PDF document, with a mobile path that actually works.
+
+      {% include pdf-viewer.html
+           pdf="/assets/cv/2026-06-29_CV.pdf"
+           image="/assets/cv/2026-06-29_CV.jpg"
+           alt="Curriculum vitae of Matteo Foglieni"
+           label="my CV"
+           aspect="210 / 297" %}
+
+  `image` is a raster of page 1 (bin/pdf-preview <pdf>); `aspect` is the page
+  shape, A4/A0 portrait by default.
+
+  Phones never get the <object>. iOS Safari and Android Chrome do not render
+  PDFs inline, and they do not reliably fall back to an <object>'s child
+  content either - they just paint an empty box, which is what made this page
+  unusable on a phone. So the embed is hidden below $medium by CSS and a
+  tappable page-1 image takes its place.
+
+  The action buttons are always rendered, above the document, so "open" and
+  "download" are reachable on every device even if the preview image is
+  missing. Use pdf-embed.html instead for a small inline thumbnail.
+{%- endcomment -%}
+
+{%- assign image_present = false -%}
+{%- for file in site.static_files -%}
+  {%- if file.path == include.image -%}
+    {%- assign image_present = true -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign label = include.label | default: "the PDF" -%}
+
+<div class="pdf-viewer" style="--pdf-aspect: {{ include.aspect | default: '210 / 297' }}">
+  <p class="pdf-viewer__actions">
+    <a class="btn btn--primary" href="{{ include.pdf | relative_url }}"
+       target="_blank" rel="noopener">Open {{ label }} in a new tab</a>
+    <a class="btn btn--inverse" href="{{ include.pdf | relative_url }}"
+       download>Download PDF</a>
+  </p>
+
+  {%- comment -%}
+    The ratio is set on this wrapper, not on the <object>: aspect-ratio does
+    not reliably size a replaced element whose plugin content has not loaded,
+    and the <object> is stretched to fill the wrapper instead.
+  {%- endcomment -%}
+  <div class="pdf-viewer__frame">
+    <object data="{{ include.pdf | relative_url }}#view=FitH"
+            type="application/pdf"
+            aria-label="{{ include.alt | default: label | escape }}"></object>
+  </div>
+
+  {%- if image_present %}
+  <a class="pdf-viewer__preview" href="{{ include.pdf | relative_url }}"
+     target="_blank" rel="noopener">
+    <img src="{{ include.image | relative_url }}"
+         alt="{{ include.alt | default: '' | escape }}" loading="lazy" decoding="async">
+  </a>
+  {%- endif %}
+</div>

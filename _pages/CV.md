@@ -1,11 +1,13 @@
 ---
 title:  "CV"
 permalink: /CV/
+layout: single
 author_profile: false
 comments: false
 ---
 
-<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-  <iframe src="../assets/cv/2026-06-29_CV.pdf" width="60%" height="90%" style="border: none;"></iframe>
-</div>
-
+{% include pdf-viewer.html
+     pdf="/assets/cv/2026-06-29_CV.pdf"
+     image="/assets/cv/2026-06-29_CV.jpg"
+     alt="Curriculum vitae of Matteo Foglieni"
+     label="my CV" %}
