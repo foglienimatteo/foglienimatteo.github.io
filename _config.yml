@@ -339,6 +339,13 @@ compress_html:
 
 # Defaults
 defaults:
+  # _pages - without this a page that forgets `layout:` renders with no
+  # layout at all: no masthead, no navigation, no stylesheet.
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: single
   # _posts
   - scope:
       path: ""

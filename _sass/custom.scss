@@ -141,6 +141,80 @@ mjx-container[display="true"] {
 }
 
 /*
+   Full-size PDF viewer - see _includes/pdf-viewer.html
+   --------------------------------------------------------------------------
+   The embed is desktop-only on purpose: mobile browsers refuse to render a
+   PDF inline and paint an empty box instead, so phones get the page-1 image.
+   The action buttons sit above both and are always visible.
+*/
+.pdf-viewer {
+  margin: 1.5em 0 2.5em;
+
+  &__actions {
+    /* Centred on the same axis as the document below and the page title
+       above; the buttons are inline-block, so text-align does it. */
+    margin-bottom: 1.2em;
+    text-align: center;
+
+    .btn {
+      margin-inline: 0.25em;
+      margin-bottom: 0.5em;
+    }
+  }
+
+  &__frame,
+  &__preview {
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    margin-inline: auto;
+  }
+
+  &__frame {
+    display: none; /* phones: see above */
+
+    @include breakpoint($medium) {
+      /* Width-driven: the height follows from the page shape. The vh term
+         keeps a portrait page from running far past the fold on a short
+         window. */
+      display: block;
+      position: relative;
+      width: 100%;
+      max-width: min(36rem, 60vh);
+      aspect-ratio: var(--pdf-aspect, 210 / 297);
+      background-color: $code-background-color;
+
+      object {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+    }
+  }
+
+  &__preview {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    overflow: hidden;
+    background-color: #fff;
+
+    @include breakpoint($medium) {
+      display: none;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+  }
+}
+
+/*
    PDF preview cards - see _includes/pdf-embed.html
    --------------------------------------------------------------------------
    `display: block` undoes the theme's flex `figure` (_base.scss), which would
