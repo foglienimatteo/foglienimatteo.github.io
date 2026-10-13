@@ -43,9 +43,14 @@
     The ratio is set on this wrapper, not on the <object>: aspect-ratio does
     not reliably size a replaced element whose plugin content has not loaded,
     and the <object> is stretched to fill the wrapper instead.
+
+    `fitvidsignore` keeps the theme's FitVids ($("#main").fitVids() in
+    _main.js) off it: FitVids treats every <object> as a video, reads its
+    missing height attribute as NaN and wraps it in a zero-height box, which
+    left an empty frame on desktop.
   {%- endcomment -%}
   <div class="pdf-viewer__frame">
-    <object data="{{ include.pdf | relative_url }}#view=FitH"
+    <object class="fitvidsignore" data="{{ include.pdf | relative_url }}#view=FitH"
             type="application/pdf"
             aria-label="{{ include.alt | default: label | escape }}"></object>
   </div>
