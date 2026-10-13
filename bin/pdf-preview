@@ -3,8 +3,17 @@
 # Render page 1 of a PDF to a web-sized JPEG beside it, for use with
 # {% include pdf-embed.html %}.
 #
-#     bin/pdf-preview assets/posters/2025-06-pasc25-poster.pdf
-#     -> assets/posters/2025-06-pasc25-poster.jpg
+#     bin/pdf-preview [-w WIDTH] [-q QUALITY] <file.pdf>
+#
+#     -w, --width    raster width in pixels (default 900). Render at roughly
+#                    twice the width the card is drawn at, so the preview
+#                    stays sharp on a high-DPI screen.
+#     -q, --quality  JPEG quality, 1-100 (default 82). Text-heavy pages such
+#                    as a CV want ~88; a poster is fine at the default.
+#
+#     bin/pdf-preview assets/posters/ISC26_Poster.pdf
+#     bin/pdf-preview -w 1600 -q 88 assets/cv/2026-06-29_CV.pdf
+#     -> writes <same path>.jpg
 #
 # Needs one of: pdftoppm (poppler-utils), magick / convert (ImageMagick).
 #   macOS:  brew install poppler
@@ -15,10 +24,23 @@ set -euo pipefail
 WIDTH=900
 QUALITY=82
 
-if [ $# -ne 1 ]; then
-  echo "usage: $(basename "$0") <file.pdf>" >&2
-  exit 2
-fi
+usage() { echo "usage: $(basename "$0") [-w WIDTH] [-q QUALITY] <file.pdf>" >&2; exit 2; }
+
+while [ $# -gt 0 ]; do
+  case $1 in
+    -w|--width)   [ $# -ge 2 ] || usage; WIDTH=$2; shift 2 ;;
+    -q|--quality) [ $# -ge 2 ] || usage; QUALITY=$2; shift 2 ;;
+    -h|--help)    sed -n '2,22p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    --)           shift; break ;;
+    -*)           echo "unknown option: $1" >&2; usage ;;
+    *)            break ;;
+  esac
+done
+
+[ $# -eq 1 ] || usage
+case $WIDTH in ''|*[!0-9]*) echo "width must be a whole number of pixels" >&2; exit 2 ;; esac
+case $QUALITY in ''|*[!0-9]*) echo "quality must be a number 1-100" >&2; exit 2 ;; esac
+[ "$QUALITY" -ge 1 ] && [ "$QUALITY" -le 100 ] || { echo "quality must be 1-100" >&2; exit 2; }
 
 pdf=$1
 [ -f "$pdf" ] || { echo "no such file: $pdf" >&2; exit 1; }
@@ -38,4 +60,4 @@ else
   exit 1
 fi
 
-echo "wrote $out.jpg ($(du -h "$out.jpg" | cut -f1))"
+echo "wrote $out.jpg (${WIDTH}px wide, q$QUALITY, $(du -h "$out.jpg" | cut -f1))"

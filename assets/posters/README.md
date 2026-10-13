@@ -16,6 +16,17 @@ To add one:
 The include renders nothing until the PDF actually exists, so an unfinished
 entry never shows a broken image on the live site.
 
+Size and sharpness are two separate knobs, in two different places:
+
+  - how big the card is drawn: `width` / `height` on the include (CSS
+    lengths). Without either, the card is capped at $pdf-preview-height.
+  - how sharp the image is: `-w` (raster pixels) and `-q` (JPEG quality) on
+    bin/pdf-preview, because those are properties of the file on disk.
+    Render at roughly twice the `width` you draw at.
+
+/CV/ uses the same include at `width="36rem"`, from a raster made with
+`bin/pdf-preview -w 1400 -q 85`.
+
 Poster PDFs exported from Illustrator or Inkscape are often 50-200MB. Git
 keeps every binary forever, so shrink it first, e.g.
 
