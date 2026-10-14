@@ -354,6 +354,10 @@ defaults:
       layout: single
       author_profile: false
       read_time: true
+      # Any post that sets `toc: true` gets a table of contents that follows
+      # the reader down the page. The theme drops it back to normal flow,
+      # above the article, below $large - a phone has no room for a margin.
+      toc_sticky: true
       comments: # true
       share: false
       related: true

@@ -1,8 +1,12 @@
 <div class="page__footer-follow">
   <ul class="social-icons">
+    {%- comment -%} "Follow:" label disabled along with the button in
+    author-profile.html; the links themselves stay. {%- endcomment -%}
+    {%- comment %}
     {% if site.data.ui-text[site.locale].follow_label %}
       <li><strong>{{ site.data.ui-text[site.locale].follow_label }}</strong></li>
     {% endif %}
+    {% endcomment -%}
 
     {% if site.footer.links %}
       {% for link in site.footer.links %}

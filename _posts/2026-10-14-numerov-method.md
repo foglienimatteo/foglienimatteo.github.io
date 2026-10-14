@@ -141,7 +141,7 @@ For example, by using the above central difference formula for $f'(x + ⁠h/2⁠
 
 $$
 f'\left(x+\frac{h}{2}\right) = \frac{f(x+h) - f(x)}{h} + o(h^2)\\[12pt]
-f'\left(x-\frac{h}{2}\right) = \frac{f(x) - f(x-h)}{h} + o(h^2) \\[18pt]
+f'\left(x-\frac{h}{2}\right) = \frac{f(x) - f(x-h)}{h} + o(h^2)
 $$
 
 $$

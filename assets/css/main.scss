@@ -19,19 +19,25 @@ search: false
 $max-width: 1280px;
 $right-sidebar-width: 280px;
 
-// Stock ladder is 16 / 18 / 20 / 22px. 22px body text in a 636px column is
-// what made the text feel cramped; flatten it so the measure does the work.
-$doc-font-size: 17px;
-$doc-font-size-medium: 18px;
-$doc-font-size-large: 18px;
-$doc-font-size-x-large: 19px;
+// Stock ladder is 16 / 18 / 20 / 22px. Flattened, then nudged back up: at
+// 19px the 36rem column below measured 91 characters per line, well past the
+// 45-75 that reads comfortably.
+$doc-font-size: 18px;
+$doc-font-size-medium: 19px;
+$doc-font-size-large: 20px;
+$doc-font-size-x-large: 21px;
 
-// Line length for running prose: 42rem is ~800px / ~88 characters at the
-// x-large font size. This is the one knob for "too thin" / "too wide".
+// Line length for running prose, and the one knob for "too thin" / "too
+// wide". Because it is in rem it fixes the line length in CHARACTERS, not in
+// pixels: this font averages 0.463em per character, so 36rem is ~78 characters
+// at every breakpoint, and the font-size ladder above decides how many pixels
+// that is (756px at x-large, inside the 700-800px most guides recommend).
+// Raising the font alone would not have shortened the line - both scale.
+//
 // rem, not em: em resolves against each element's OWN font-size, so the same
 // value would cap an h1 at more than twice the width of a paragraph.
 // Display math, code, figures and tables are deliberately NOT capped to it.
-$content-measure: 42rem;
+$content-measure: 36rem;
 
 // Height of an embedded PDF preview card. Capped by HEIGHT, not width, so a
 // portrait A0 poster and a landscape slide both come out a sensible size.

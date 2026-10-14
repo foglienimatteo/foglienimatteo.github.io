@@ -83,6 +83,11 @@
 .page__content {
   line-height: 1.7;
 
+  /* How far the centred prose column sits from the left edge of this box.
+     Anything that should line up with the text, but still be free to run
+     wider to the right, can start at this offset. */
+  --prose-offset: max(0px, calc((100% - #{$content-measure}) * 0.5));
+
   > p,
   > ul,
   > ol,
@@ -122,6 +127,29 @@
 }
 
 /*
+   Author links without the Follow button
+   --------------------------------------------------------------------------
+   The theme hides .author__urls below $large and reveals it with the Follow
+   button in author-profile.html, which is now commented out. Without this the
+   GitHub / LinkedIn / Mail links would simply vanish on a phone. Show them
+   inline at every width, the way the theme already does on desktop.
+*/
+.author__urls {
+  display: block;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+
+  &::before,
+  &::after {
+    display: none;
+  }
+}
+
+/*
    Display math must never widen the page
    --------------------------------------------------------------------------
    The wide `cases` blocks in the cubic-spline post are ~1000px at this font
@@ -135,9 +163,36 @@
 .MathJax_Display,
 mjx-container[display="true"] {
   max-width: 100%;
+
+  /* MathJax puts an inline min-width on any display equation wider than its
+     box - numbered and aligned ones especially, since those are laid out as
+     tables. min-width beats max-width, and an inline style can only be beaten
+     by !important, so without this the container refuses to shrink and the
+     WHOLE PAGE scrolls sideways instead of the equation scrolling inside its
+     own box. Worst on a phone. */
+  min-width: 0 !important;
+
   overflow-x: auto;
   overflow-y: hidden;
   padding-block: 0.4em; /* room for the scrollbar, so it never clips glyphs */
+
+  /* Display math is left-aligned (chtml.displayAlign in _includes/scripts.html);
+     this is the small indent off the margin. Done here rather than with
+     MathJax's own displayIndent because that has no effect on a numbered
+     equation - MathJax lays those out as a full-width table - which would
+     indent unnumbered equations and leave numbered ones flush left. Padding
+     narrows the content box, so the equation number stays at the right edge. */
+  /* The offset starts the equation at the prose's left edge rather than the
+     column's, so it reads as part of the text instead of hanging into the
+     margin, while the container still reaches the full column width on the
+     right - a wide derivation has somewhere to go before it has to scroll.
+
+     Padding, not margin: MathJax's own injected stylesheet sets `margin` as a
+     shorthand on mjx-container[jax][display] and wins the specificity tie, so
+     a margin here is silently dropped. With box-sizing: border-box the
+     padding narrows the content box instead, which also keeps the equation
+     number against the right edge. */
+  padding-inline-start: calc(2em + var(--prose-offset, 0px));
 }
 
 /*

@@ -23,7 +23,16 @@
   </div>
 
   <div class="author__urls-wrapper">
+    {%- comment -%}
+      Follow button disabled: there is nothing to subscribe to. Kept rather
+      than deleted in case that changes. Note that the links below are hidden
+      by the theme on small screens and this button was the only thing that
+      revealed them, so _sass/custom.scss now shows them inline instead; undo
+      that too if you put the button back.
+    {%- endcomment -%}
+    {%- comment %}
     <button class="btn btn--inverse">{{ site.data.ui-text[site.locale].follow_label | remove: ":" | default: "Follow" }}</button>
+    {% endcomment -%}
     <ul class="author__urls social-icons">
       {% if author.location %}
         <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
