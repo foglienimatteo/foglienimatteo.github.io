@@ -32,7 +32,12 @@
 {%- endfor -%}
 
 {%- if pdf_present -%}
-<figure class="pdf-embed">
+{%- comment -%} Only emit the custom properties that were actually asked for. {%- endcomment -%}
+{%- capture box -%}
+  {%- if include.width %}--pdf-w: {{ include.width }};{% endif -%}
+  {%- if include.height %}--pdf-h: {{ include.height }};{% elsif include.width %}--pdf-h: none;{% endif -%}
+{%- endcapture -%}
+<figure class="pdf-embed"{% if box != "" %} style="{{ box }}"{% endif %}>
   <a class="pdf-embed__preview"
      href="{{ include.pdf | relative_url }}"
      target="_blank" rel="noopener"
