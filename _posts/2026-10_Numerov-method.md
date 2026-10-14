@@ -1,3 +1,20 @@
+---
+title: "Numerov's method"
+#date:
+#excerpt_separator: "<!--more-->"
+last_modified_at: 2026-10-14T16:20:02-05:00
+categories:
+  - Blog
+tags:
+  - Post Formats
+  - math
+  - physics
+toc: true   # Table-Of-Content
+toc_label: "Table of Contents"
+toc_icon: "cog"
+# link: https://github.com
+---
+
 # Numerov's method — step-by-step derivation of Eqs. (1)–(7)
 
 Source: J. L. M. Quiroz González and D. Thompson (1997), *Getting started with Numerov's method*,
