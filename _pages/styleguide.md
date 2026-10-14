@@ -1,14 +1,18 @@
 ---
-title: "All options of posts"
-#date:
-#excerpt_separator: "<!--more-->"
+# Reference page for how markup renders on this site. Deliberately NOT in
+# _posts: a file there is in site.posts, and so would appear on /Blogs/, on
+# the home page, in the Atom feed and in "related posts". As a page with its
+# own permalink it is reachable at /styleguide/ and listed nowhere.
+#   sitemap: false  keeps it out of sitemap.xml, so search engines skip it
+#   search: false   keeps it out of the lunr index, if search is ever enabled
+# Link it from the nav in _data/navigation.yml if you ever want it public.
+title: "Style guide: all options of posts"
+permalink: /styleguide/
+layout: single
+sitemap: false
+search: false
+author_profile: false
 last_modified_at: 2025-04-25T16:20:02-05:00
-categories:
-  - Blog
-tags:
-  - Post Formats
-  - readability
-  - standard
 toc: true   # Table-Of-Content
 toc_label: "Table of Contents"
 toc_icon: "cog"
@@ -195,3 +199,55 @@ Or you could skip the capture and stick with straight HTML.
   <h4>Message</h4>
   <p>A basic message.</p>
 </div>
+
+
+## Equations: numbering and alignment
+
+Display math is left-aligned with a small indent (`displayAlign` / `displayIndent`
+in `_includes/scripts.html`), not centred.
+
+A bare `$$ ... $$` block is **not** numbered:
+
+$$
+y'' = f(x, y)
+$$
+
+Wrap it in `equation` to get a number, and `\label` to refer back to it:
+
+```latex
+$$
+\begin{equation}
+  y_{n+1} - 2y_n + y_{n-1} = h^2 f_n + \frac{h^4}{12} f_n'' + O(h^6)
+  \label{eq:numerov}
+\end{equation}
+$$
+```
+
+$$
+\begin{equation}
+  y_{n+1} - 2y_n + y_{n-1} = h^2 f_n + \frac{h^4}{12} f_n'' + O(h^6)
+  \label{eq:numerov}
+\end{equation}
+$$
+
+Reference it anywhere on the page with `\eqref{eq:numerov}`, which renders as
+a live link: see $\eqref{eq:numerov}$.
+
+`align` numbers every line; `\notag` drops the number from one:
+
+$$
+\begin{align}
+  a^2 + b^2 &= c^2 \label{eq:pythagoras} \\
+  e^{i\pi} + 1 &= 0 \notag \\
+  \int_0^\infty e^{-x^2}\,dx &= \frac{\sqrt{\pi}}{2}
+\end{align}
+$$
+
+`\tag{...}` sets a number by hand, which is what you want when transcribing a
+paper and the numbers have to match it:
+
+$$
+\begin{equation}
+  \psi(x) = \sum_n c_n \phi_n(x) \tag{7}
+\end{equation}
+$$

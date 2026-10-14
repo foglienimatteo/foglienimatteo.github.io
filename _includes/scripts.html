@@ -30,9 +30,22 @@
 
 {%- comment -%}
   MathJax 3. kramdown turns $$...$$ into \[...\] (display) or \(...\)
-  (inline); bare $...$ is left to MathJax. tags: 'ams' numbers the
-  equation/align environments and enables \label/\eqref; \tag{...} sets a
-  number by hand.
+  (inline); bare $...$ is left to MathJax.
+
+  tags: 'ams' numbers the equation/align/gather environments automatically and
+  enables \label/\eqref; \tag{...} sets a number by hand and \notag drops one.
+  A bare $$...$$ is NOT an AMS environment, so it is never numbered - wrap it
+  in \begin{equation}...\end{equation} when you want a number.
+
+  displayAlign: 'left' puts display math against the left margin instead of
+  centring it, which reads better in a narrow column and keeps multi-line
+  derivations aligned with the prose. It belongs to the output jax, hence the
+  `chtml` block. Equation numbers still go to the right.
+
+  The indent is NOT displayIndent but padding on the container, in
+  _sass/custom.scss: displayIndent does not apply to a numbered equation,
+  which MathJax lays out as a full-width table, so using it would indent
+  unnumbered equations and leave numbered ones flush left.
 {%- endcomment -%}
 <script>
   window.MathJax = {
@@ -41,6 +54,9 @@
       displayMath: [['$$', '$$'], ['\\[', '\\]']],
       processEscapes: true,
       tags: 'ams'
+    },
+    chtml: {
+      displayAlign: 'left'
     }
   };
 </script>
