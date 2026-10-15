@@ -53,7 +53,14 @@
       inlineMath: [['$', '$'], ['\\(', '\\)']],
       displayMath: [['$$', '$$'], ['\\[', '\\]']],
       processEscapes: true,
-      tags: 'ams'
+      tags: 'ams',
+      macros: {
+        RR: "{\\mathbb{R}}",
+        curl: "\\nabla\\times",
+        dd: "\\mathrm{d}",
+        abs: ["\\left|#1\\right|", 1],    // one argument
+        norm: ["\\left\\lVert#1\\right\\rVert", 1]
+      }
     },
     chtml: {
       displayAlign: 'left'

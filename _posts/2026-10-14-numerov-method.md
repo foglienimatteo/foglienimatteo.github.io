@@ -136,12 +136,11 @@ $$
 ### Second order fainite differences
 
 In an analogous way, one can obtain finite difference approximations to higher order derivatives and differential operators. 
-For example, by using the above central difference formula for $f'(x + ⁠h/2⁠)$ and $f'(x − ⁠h/2⁠)$ and applying a central difference formula for the derivative of $f'$ at ${x}$, we obtain the central difference approximation of the second derivative of ${f}$ :
-
+For example, by using the above central difference formula for $f'(x + ⁠h/2⁠)$ and $f'(x − ⁠h/2⁠)$ and applying a central difference formula for the derivative of $f'$ at ${x}$, we obtain the central difference approximation of ${f''}$:
 
 $$
-f'\left(x+\frac{h}{2}\right) = \frac{f(x+h) - f(x)}{h} + o(h^2)\\[12pt]
-f'\left(x-\frac{h}{2}\right) = \frac{f(x) - f(x-h)}{h} + o(h^2)
+f'\left(x+\frac{h}{2}\right) = \frac{f(x+h) - f(x)}{h} + o(h^2) \quad , \quad \quad
+f'\left(x-\frac{h}{2}\right) = \frac{f(x) - f(x-h)}{h} + o(h^2) \\[18pt]
 $$
 
 $$
@@ -155,6 +154,59 @@ $$
      + o(h^2) \\[15pt]
 \end{align*}
 $$
+
+Analogously for backward and forward differences:
+
+$$
+\begin{align*}
+f''(x) &= 
+    \frac{1}{h}\left[f'(x+h) - f'(x)\right] + o(h) \\[15pt]
+    &=\frac{1}{h}\left[
+        \frac{f(x+2h) - f(x+h)}{h} - \frac{f(x+h) - f(x)}{h}
+    \right] + o(h) \\[15pt]
+    &= \frac{f(x+2h) - 2\,f(x+h) + f(x)}{h^2} 
+     + o(h) \\[15pt]
+f''(x) &= 
+    \frac{1}{h}\left[f'(x) - f'(x-h)\right] + o(h) \\[15pt]
+    &=\frac{1}{h}\left[
+        \frac{f(x) - f(x-h)}{h} - \frac{f(x-h) - f(x-2h)}{h}
+    \right] + o(h) \\[15pt]
+    &= \frac{f(x) - 2\,f(x-h) + f(x-2h)}{h^2} 
+     + o(h) \\[15pt]
+\end{align*}
+$$
+
+Note that we can also rewrite it in the following way:
+
+$$
+\begin{align*}
+\Delta^2_h[f](x) &:=  \Delta_h[\Delta_h[f]](x)  \\[10pt]
+    &= \Delta_h[g_h](x) \quad , \quad \quad g_h(x):=f(x+h)-f(x) \\[10pt]
+    &= g_h(x+h)-g_h(x) \\[10pt]
+    &=\left[ f(x+2h) - f(x+h)\right] - \left[ f(x+h) - f(x)\right] \\[10pt]
+    &=f(x+2h) - 2\,f(x+h) + f(x) \\[10pt]
+\Rightarrow \quad f''(x) &= \frac{\Delta^2_h[f](x)}{h^2} + o(h) \\[15pt]
+
+\nabla^2_h[f](x) &:=  \nabla_h[\nabla_h[f]](x)  \\[10pt]
+    &= \nabla_h[g_h](x) \quad , \quad \quad g_h(x):=f(x)-f(x-h) \\[10pt]
+    &= g_h(x)-g_h(x-h) \\[10pt]
+    &=\left[ f(x) - f(x-h)\right] - \left[ f(x-h) - f(x-2h)\right] \\[10pt]
+    &=f(x) - 2\,f(x-h) + f(x-2h) \\[10pt]
+\Rightarrow \quad f''(x) &= \frac{\nabla^2_h[f](x)}{h^2} + o(h) \\[15pt]
+
+\delta^2_h[f](x) &:=  \delta_h[\delta_h[f]](x)  \\[10pt]
+    &= \delta_h[g_h](x) \quad , \quad \quad g_h(x):=f(x+\tfrac{h}{2})-f(x-\tfrac{h}{2}) \\[10pt]
+    &= g_h(x+\tfrac{h}{2})-g_h(x-\tfrac{h}{2}) \\[10pt]
+    &=\left[ f(x+h) - f(x)\right] - \left[ f(x) - f(x-h)\right] \\[10pt]
+    &=f(x+h) - 2\,f(x) + f(x-h) \\[10pt]
+\Rightarrow \quad f''(x) &= \frac{\delta^2_h[f](x)}{h^2} + o(h^2) \\[15pt]
+\end{align*}
+$$
+
+$$
+\dd^2 f 
+$$
+
 ## 1. Class of equations — Eqs. (1)–(3)
 
 Numerov's method is an efficient algorithm for solving second-order differential equations of the following form:
