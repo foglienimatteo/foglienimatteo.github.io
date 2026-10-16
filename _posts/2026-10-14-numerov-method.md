@@ -13,7 +13,18 @@ toc: true   # Table-Of-Content
 toc_label: "Table of Contents"
 toc_icon: "cog"
 # link: https://github.com
+
+
 ---
+
+$$
+\RR^2 f 
+$$
+
+
+
+
+$\dd$
 
 # Numerov's method — step-by-step derivation of Eqs. (1)–(7)
 
@@ -37,7 +48,10 @@ Notation is the paper's. Equation numbers (1)–(7) are the paper's; intermediat
 **Taylor's theorem** Given a function ${\displaystyle f:\mathbb{R} \to \mathbb{R} }$ that is ${N \geq 1}$ times differentiable at the point ${a\in \mathbb {R} }$, there exists a function ${\displaystyle g_{N}:\mathbb {R} \to \mathbb {R} }$ such that
 
 $$ 
+\begin{equation}
 f(x) = \sum_{k=0}^{N}{\frac {f^{(k)}(a)}{k!}}(x-a)^{k} + g_{N}(x)(x-a)^{k} \; , \quad \quad \lim _{x\to a}g_{N}(x)=0.
+\label{eq:numerov}
+\end{equation}
 $$
 
 The polynomial appearing in Taylor's theorem is the ${\textstyle {\boldsymbol {N}}}$-th order Taylor polynomial of the function ${\displaystyle f}$ at the point ${\displaystyle a}$
@@ -203,9 +217,7 @@ $$
 \end{align*}
 $$
 
-$$
-\dd^2 f 
-$$
+
 
 ## 1. Class of equations — Eqs. (1)–(3)
 
