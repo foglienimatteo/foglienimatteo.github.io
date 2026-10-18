@@ -1,5 +1,5 @@
 ---
-title: "Analytical derivation of Bank interest functions"
+title: "Bank interest functions: analytical derivation"
 #date:
 #excerpt_separator: "<!--more-->"
 last_modified_at: 2026-10-18T16:20:02-05:00
@@ -20,8 +20,8 @@ Notation:
 
 - $D$ : loan amount
 - $R$ : monthly installment
-- $I$ : nominal annual rate
-- $i = \frac{I}{12}$ : monthly rate, 30/360 convention
+- $I$ : nominal annual interest rate
+- $i = \frac{I}{12}$ : monthly interest rate, 30/360 convention
 - $N$ : total number of installments
 - $T = D + Z$ : total paid (loan + interests)
 - $Z$ : total interests paid
@@ -32,7 +32,7 @@ For the $n$-th installment:
 - $p_n = R - i\,d_{n-1}$ : principal part of the $n$-th installment
 - $z_n = i\,d_{n-1}$ : interest part of the $n$-th installment
 
-here a summary of all the equations:
+Here a summary of all the equations derived in this article:
 
 $$
 \boxed{N = \lceil n^* \rceil}
