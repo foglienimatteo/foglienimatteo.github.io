@@ -36,9 +36,9 @@ For the $n$-th installment:
 
 
 
-![](../assets/images/bank-interest-rates/monthly-interest-paid-for-different-interest-rates.png)
+![]({{ '/assets/images/bank-interest-rates/monthly-interest-paid-for-different-interest-rates.png' | relative_url }})
 
 
-![](../assets/images/bank-interest-rates/total-interest-paid-for-different-interest-rates-2.png)
+![]({{ '/assets/images/bank-interest-rates/total-interest-paid-for-different-interest-rates-2.png' | relative_url }})
 
 
