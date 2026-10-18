@@ -179,7 +179,7 @@ d_n = 0
 \end{align*}
 $$
 
-In the previous expression, $n^{*}$ is real-valued => the (integer) number of installments is $N = \lceil n^{*} \rceil$.
+In the previous expression, $n^{\*}$ is real-valued => the (integer) number of installments is $N = \lceil n^{\*} \rceil$.
 However, the last installment, that pays the remaining debt plus one month of interest on it, is smaller than (or equal to) the standard $R$:
 
 $$
