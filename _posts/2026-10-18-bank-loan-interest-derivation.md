@@ -244,7 +244,7 @@ $$
 
 This is a polynomial of degree $N$ in $x$. For $N \ge 5$ there is no general solution in radicals (Abel–Ruffini), and $N$ is usually in the hundreds. The same equation defines the APR / internal rate of return.
 
-Existence and uniqueness of a positive rate: $g$ is strictly increasing on $x > 0$, with $g(0) = -D < 0$ and $g(x) \to \infty$. So there is exactly one positive root $x^*$. It satisfies $x^* < 1$, i.e. $i > 0$, iff
+Existence and uniqueness of a positive rate: $g$ is strictly increasing on $x > 0$, with $g(0) = -D < 0$ and $g(x) \to \infty$. So there is exactly one positive root $x^{\*}$. It satisfies $x^{\*} < 1$, i.e. $i > 0$, iff
 
 $$
 g(1) = R\,N - D > 0
