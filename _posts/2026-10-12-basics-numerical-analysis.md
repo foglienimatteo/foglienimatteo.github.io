@@ -30,17 +30,18 @@ $$
 f''(x) = \frac{\delta^2_h[f](x)}{h^2} + o(h^2) \; , \quad \quad \delta^2_h[f](x) = f(x+h) - 2\,f(x) + f(x-h) \tag{3.1a} 
 $$
 
-Rewritten using the index notation $x_n$ and $f_n = f(x_n)$ and assuming that all the elements are equally spaced by $h=x_{n+1}-x_{n}\, ,\; \forall\, n=0,...,N$
+Rewritten using the index notation $x_n$ and $f_n = f(x_n)$ and assuming that all the elements are equally spaced by $h=x_{n+1}-x_{n}\, ,\; \forall\, n=0,...,N$, for the first derivative:
 
 
 $$
 f_{n}' = \begin{cases}\tag{2.5a-c}
-\displaystyle \frac{f_{n+1} - f_{n-1}}{2h} + o(h^2) \\[10pt]
+\displaystyle \frac{f_{n+1} - f_{n-1}}{2h} + O(h^2) \\[10pt]
 \displaystyle \frac{f_{n+1} - f_n}{h}  + o(h)  \\[10pt]
 \displaystyle \frac{f_{n} - f_{n-1}}{h}  + o(h)  \\[10pt]
 \end{cases}
 $$
 
+and for the second:
 
 $$
 f_{n}'' = \begin{cases}\tag{3.2a-c}
@@ -62,31 +63,52 @@ f(x) = \sum_{k=0}^{N}{\frac {f^{(k)}(a)}{k!}}(x-a)^{k} + g_{N}(x)(x-a)^{k} \; , 
 \tag{1.1}
 $$
 
-The polynomial appearing in Taylor's theorem is the ${\textstyle {\boldsymbol {N}}}$-th order Taylor polynomial of the function ${\displaystyle f}$ at the point ${\displaystyle a}$
+The polynomial appearing in Taylor's theorem is the ${\displaystyle {\boldsymbol {N}}}$-th order Taylor polynomial of the function ${\displaystyle f}$ at the point ${\displaystyle a}$
 
 $$
 P_{N}(x) = f(a)+f'(a)(x-a)+{\frac {f''(a)}{2!}}(x-a)^{2}+\cdots +{\frac {f^{(N)}(a)}{N!}}(x-a)^{N}
 \tag{1.2}
 $$
 
-Using the little-o notation, the statement in Taylor's theorem reads as
+Using the little-$o$ and big-$O$ notation, the statement in Taylor's theorem reads as
 
 $$
 f(x) = \sum_{k=0}^{N}{\frac {f^{(k)}(a)}{k!}}(x-a)^{k} + o(\lvert x-a \rvert^N)
-\tag{1.3}
+\tag{1.3a}
+$$
+
+$$
+f(x) = \sum_{k=0}^{N}{\frac {f^{(k)}(a)}{k!}}(x-a)^{k} + O(\lvert x-a \rvert^{N+1})
+\tag{1.3b}
 $$
 
 We can rewrite the theorem in a slightly different notation, with the substitutions $x \rightarrow x+h$ and $a \rightarrow x$
 
 $$
-\begin{align*} \tag{1.4}
-f(x+h)  &= \sum_{k=0}^{N}{\frac {h^k}{k!}}f^{(k)}(x) + o(h^N) \\[15pt]
-        &= f(x) + o(1) \\[10pt]
-        &= f(x) + h \, f'(x) + o(h) \\[10pt]
-        &= f(x) + h \, f'(x) + \frac{h^2}{2} f''(x) + o(h^2) \\[10pt]
+\begin{align*} \tag{1.4a-b}
+f(x+h)  &= \sum_{k=0}^{N}{\frac {h^k}{k!}}f^{(k)}(x) + o(h^N) & 
+f(x+h)  &= \sum_{k=0}^{N}{\frac {h^k}{k!}}f^{(k)}(x) + O(h^{N+1})\\[15pt]
+        &= f(x) + o(1) &
+        &= f(x) + O(h) \\[7pt]
+        &= f(x) + h \, f'(x) + o(h) &
+        &= f(x) + h \, f'(x) + O(h^2) \\[7pt]
+        &= f(x) + h \, f'(x) + \frac{h^2}{2} f''(x) + o(h^2) & 
+        &= f(x) + h \, f'(x) + \frac{h^2}{2} f''(x) + O(h^3) \\[7pt]
+        &= ... &
         &= ...
 \end{align*}
 $$
+
+Rewritten using the index notation $x_n$ and $f_n = f(x_n)$ and assuming that all the elements are equally spaced by $h=x_{n+1}-x_{n}\, ,\; \forall\, n=0,...,N$
+
+$$
+\begin{align*} \tag{1.5}
+f_{n+1}  &= \sum_{k=0}^{N}{\frac {h^k}{k!}}f^{(k)}_n + o(h^N) \\[15pt]
+        &= \sum_{k=0}^{N}{\frac {h^k}{k!}}f^{(k)}_n + O(h^{N+1}) \\[15pt]
+        &= f_n + h \, f_n' + \frac{h^2}{2} f_n'' + \frac{h^3}{6} f_n''' + ... \\[7pt]
+\end{align*}
+$$
+
 
 
 ## First order finite differences
@@ -160,39 +182,43 @@ f_{n}' &= \frac{f_{n} - f_{n-1}}{h} + o(h) \tag{2.5c} \\[10pt]
 \end{align}
 $$
 
-Unfortunately, the central difference has (and will for every odd $n$) $h$ multiplied by the non-integer $1/2$. This is often a problem because it amounts to changing the interval of discretization, but we can remedy by substituting the average of  ${\textstyle \delta^n[f](x-\tfrac {h}{2})}$ and ${\textstyle \delta^n[f](x+\tfrac{h}{2})}$:
-
-
+Unfortunately, the central difference has (and will for every odd $n$) $h$ multiplied by the non-integer $1/2$. This is often a problem because it amounts to changing the interval of discretization, but we can remedy by applying the Taylor theorem of Eq.(1.4):
 
 $$
-\begin{align*}
-\delta^n[f](x + \tfrac{h}{2}) &= f(x+h) - f(x) 
-\; , \quad \quad 
-&\delta^n[f](x - \tfrac{h}{2}) &= f(x) - f(x-h)\\[13pt]
-\Rightarrow \quad
-f(x+\tfrac{h}{2}) &= \frac{f(x+h) - f(x)}{2} + o(h^2)
-\; , \quad \quad 
-&f(x-\tfrac{h}{2}) &= \frac{f(x) - f(x-h)}{2} + o(h^2)\\[6pt]
- &= \frac{1}{2} \delta^n[f](x + \tfrac{h}{2}) + o(h^2)
-\; , \quad \quad 
-& &= \frac{1}{2} \delta^n[f](x - \tfrac{h}{2}) + o(h^2)\\[8pt]
-\end{align*}
+(1.4) \; : \begin{cases}
+f(x + h) = f(x) + h \, f'(x) + \frac{h^2}{2} \, f''(x) + \frac{h^3}{6} \, f'''(x) + ... \\[7pt]
+f(x - h) = f(x) - h \, f'(x) + \frac{h^2}{2} \, f''(x) - \frac{h^3}{6} \, f'''(x) + ...\\[10pt]
+\end{cases}
+$$
+
+which for the sum leads to:
+
+$$
+\, \Rightarrow \; 
+\frac{f(x + h) + f(x-h)}{2} =  f(x) + \frac{h^2}{2} \, f''(x) + ... 
 $$
 
 $$
-\begin{align} 
-\Rightarrow \quad \delta_h[f](x) &
-:= f(x+\tfrac{h}{2}) - f(x-\tfrac{h}{2})\notag\\[10pt]
-&=\frac{\delta^n[f](x+ \tfrac{h}{2}) + \delta^n[f](x - \tfrac{h}{2})}{2} + o(h^2)
-\tag{2.6a}\\[10pt]
-&=\frac{f(x+h) - f(x-h)}{2h} + o(h^2)
-\tag{2.6b}\\[10pt]
-\end{align}
+\tag{2.6}
+\Rightarrow \quad f(x) = \frac{f(x+h) + f(x-h)}{h} + O(h^2)
+$$
+
+
+and for the difference leads to:
+
+$$
+\, \Rightarrow \; 
+\frac{f(x + h) - f(x-h)}{2} =  h\,f'(x) + \frac{h^3}{6} \, f'''(x) + ... 
+$$
+
+$$
+\tag{2.7}
+\Rightarrow \quad f'(x) = \frac{f(x+h) - f(x-h)}{2h} + O(h^2)
 $$
 
 $$
 \tag{2.5a}
-\Rightarrow \quad f_{n}' = \frac{f_{n+1} - f_{n-1}}{2h} + o(h^2)
+\Rightarrow \quad f_{n}' = \frac{f_{n+1} - f_{n-1}}{2h} + O(h^2)
 $$
 
 
