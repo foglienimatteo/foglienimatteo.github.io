@@ -30,7 +30,7 @@ $$
 f''(x) = \frac{\delta^2_h[f](x)}{h^2} + o(h^2) \; , \quad \quad \delta^2_h[f](x) = f(x+h) - 2\,f(x) + f(x-h) \tag{3.1a} 
 $$
 
-Rewritten using the index notation $x_n$ and $f_n = f(x_n)$ and assuming that all the elements are equally spaced by $h=x_{n+1}-x_{n}\, ,\; \forall\, n=0,...,N$, for the first derivative:
+Rewritten using the index notation $x_n$ and $f_n = f(x_n)$ and assuming that all the elements are equally spaced by $h=x_{n+1}-x_{n}\, ,\; \forall\, n=0,...,N-1$, for the first derivative:
 
 
 $$
@@ -45,9 +45,9 @@ and for the second:
 
 $$
 f_{n}'' = \begin{cases}\tag{3.2a-c}
-\displaystyle \frac{f_{n+1} - 2f_n + f_{n-1}}{h} + o(h^2) \\[10pt]
-\displaystyle \frac{f_{n+2} - 2f_{n+1} + f_{n} }{h} + o(h)  \\[10pt]
-\displaystyle \frac{f_{n} - 2f_{n-1} + f_{n-2} }{h} + o(h)  \\[10pt]
+\displaystyle \frac{f_{n+1} - 2f_n + f_{n-1}}{h^2} + o(h^2) \\[10pt]
+\displaystyle \frac{f_{n+2} - 2f_{n+1} + f_{n} }{h^2} + o(h)  \\[10pt]
+\displaystyle \frac{f_{n} - 2f_{n-1} + f_{n-2} }{h^2} + o(h)  \\[10pt]
 \end{cases}
 $$
 
@@ -59,7 +59,7 @@ $$
 **Taylor's theorem** Given a function ${\displaystyle f:\mathbb{R} \to \mathbb{R} }$ that is ${N \geq 1}$ times differentiable at the point ${a\in \mathbb {R} }$, there exists a function ${\displaystyle g_{N}:\mathbb {R} \to \mathbb {R} }$ such that
 
 $$ 
-f(x) = \sum_{k=0}^{N}{\frac {f^{(k)}(a)}{k!}}(x-a)^{k} + g_{N}(x)(x-a)^{k} \; , \quad \quad \lim _{x\to a}g_{N}(x)=0.
+f(x) = \sum_{k=0}^{N}{\frac {f^{(k)}(a)}{k!}}(x-a)^{k} + g_{N}(x)(x-a)^{N} \; , \quad \quad \lim _{x\to a}g_{N}(x)=0.
 \tag{1.1}
 $$
 
@@ -82,6 +82,8 @@ f(x) = \sum_{k=0}^{N}{\frac {f^{(k)}(a)}{k!}}(x-a)^{k} + O(\lvert x-a \rvert^{N+
 \tag{1.3b}
 $$
 
+NOTE: the big-$O$ notation in (1.3b) has slightly stronger assumptions than the little-$o$ one in (1.3a): the former requires that $f$ is differentiable $N+1$ times at $a$ instead of $N$ times.
+
 We can rewrite the theorem in a slightly different notation, with the substitutions $x \rightarrow x+h$ and $a \rightarrow x$
 
 $$
@@ -99,7 +101,7 @@ f(x+h)  &= \sum_{k=0}^{N}{\frac {h^k}{k!}}f^{(k)}(x) + O(h^{N+1})\\[15pt]
 \end{align*}
 $$
 
-Rewritten using the index notation $x_n$ and $f_n = f(x_n)$ and assuming that all the elements are equally spaced by $h=x_{n+1}-x_{n}\, ,\; \forall\, n=0,...,N$
+Rewritten using the index notation $x_n$ and $f_n = f(x_n)$ and assuming that all the elements are equally spaced by $h=x_{n+1}-x_{n}\, ,\; \forall\, n=0,...,N-1$
 
 $$
 \begin{align*} \tag{1.5}
@@ -113,12 +115,27 @@ $$
 
 ## First order finite differences
 
-The derivative of a function $f$ at a point $x$ is defined by the limit
+The derivative of a function $f$ at a point $x$ is defined by the limit:
 
 $$
-f'(x) := \lim_{h \rightarrow 0^{+}} \frac{f(x+h)-f(x)}{h}
-\tag{2.1}
+f'(x) := \lim_{h \rightarrow 0} \frac{f(x+h)-f(x)}{h}
+\tag{2.1a}
 $$
+
+More precively, it is said that the derivative $f$ at a point $x$ is the limit in (2.1a) if both the
+right limit and the left limit exists, are finite and coincide, and such value is the limit of (2.1a)
+
+$$
+a := \lim_{h \rightarrow 0^{+}} \frac{f(x+h)-f(x)}{h}
+\; , \quad
+b := \lim_{h \rightarrow 0^{-}} \frac{f(x+h)-f(x)}{h} \; ,
+\tag{2.1b}
+$$
+
+$$
+\exist f'(x) \iff a, b \in \mathbb{R}: \; a=b=:f'(x) \, .
+$$
+
 
 We define the forward difference ${\Delta_{h}[f]}$, backward difference ${\nabla_{h}[f]}$ and central difference ${\delta_{h}[f]}$ as:
 
@@ -136,7 +153,7 @@ $$
 \end{align}
 $$
 
-We can approximate the derivative of a function (assuming is twice differentiable, three times for centered-difference) using each of the previous three differences. Applying Taylor's theorem, we can get the error of each approximation:
+We can approximate the derivative of a function (assuming $f$ is twice differentiable, three times for centered-difference) using each of the previous three differences. Applying Taylor's theorem, we can get the error of each approximation:
 
 $$
 \begin{align*}
@@ -173,7 +190,7 @@ f'(x) &= \frac{\nabla_h[f](x)}{h} + o(h) \; , \quad \quad \nabla_h[f](x) := f(x)
 \end{align}
 $$
 
-Rewritten using the index notation $x_n$ and $f_n = f(x_n)$ and assuming that all the elements are equally spaced by $h=x_{n+1}-x_{n}\, ,\; \forall\, n=0,...,N$
+Rewritten using the index notation $x_n$ and $f_n = f(x_n)$ and assuming that all the elements are equally spaced by $h=x_{n+1}-x_{n}\, ,\; \forall\, n=0,...,N-1$
 
 $$
 \begin{align}
@@ -200,7 +217,7 @@ $$
 
 $$
 \tag{2.6}
-\Rightarrow \quad f(x) = \frac{f(x+h) + f(x-h)}{h} + O(h^2)
+\Rightarrow \quad f(x) = \frac{f(x+h) + f(x-h)}{2} + O(h^2)
 $$
 
 
@@ -303,13 +320,13 @@ f''(x) &= \frac{\nabla^2_h[f](x)}{h^2} + o(h) \; , \quad \quad \nabla^2_h[f](x) 
 $$
 
 
-Rewritten using the index notation $x_n$ and $f_n = f(x_n)$ and assuming that all the elements are equally spaced by $h=x_{n+1}-x_{n}\, ,\; \forall\, n=0,...,N$
+Rewritten using the index notation $x_n$ and $f_n = f(x_n)$ and assuming that all the elements are equally spaced by $h=x_{n+1}-x_{n}\, ,\; \forall\, n=0,...,N-1$
 
 $$
 \begin{align}
-f_{n}'' &= \frac{f_{n+1} - 2f_n + f_{n-1}}{h} + o(h^2) \tag{3.2a}\\[10pt]
-f_{n}'' &= \frac{f_{n+2} - 2f_{n+1} + f_{n} }{h} + o(h) \tag{3.2b} \\[10pt]
-f_{n}'' &= \frac{f_{n} - 2f_{n-1} + f_{n-2} }{h} + o(h) \tag{3.2b} \\[10pt]
+f_{n}'' &= \frac{f_{n+1} - 2f_n + f_{n-1}}{h^2} + o(h^2) \tag{3.2a}\\[10pt]
+f_{n}'' &= \frac{f_{n+2} - 2f_{n+1} + f_{n} }{h^2} + o(h) \tag{3.2b} \\[10pt]
+f_{n}'' &= \frac{f_{n} - 2f_{n-1} + f_{n-2} }{h^2} + o(h) \tag{3.2c} \\[10pt]
 \end{align}
 $$
 
