@@ -23,11 +23,11 @@ We summarise the important equations derived in this article, for a function  ${
 
 
 $$
-f'(x) = \frac{\delta_h[f](x)}{h} + o(h^2) \; , \quad \quad \delta_h[f](x) := f(x+\tfrac{h}{2}) - f(x-\tfrac{h}{2})  \tag{2.4a}
+f'(x) = \frac{\delta_h[f](x)}{h} + O(h^2) \; , \quad \quad \delta_h[f](x) := f(x+\tfrac{h}{2}) - f(x-\tfrac{h}{2})  \tag{2.4a}
 $$
 
 $$
-f''(x) = \frac{\delta^2_h[f](x)}{h^2} + o(h^2) \; , \quad \quad \delta^2_h[f](x) = f(x+h) - 2\,f(x) + f(x-h) \tag{3.1a} 
+f''(x) = \frac{\delta^2_h[f](x)}{h^2} + O(h^2) \; , \quad \quad \delta^2_h[f](x) = f(x+h) - 2\,f(x) + f(x-h) \tag{3.1a} 
 $$
 
 Rewritten using the index notation $x_n$ and $f_n = f(x_n)$ and assuming that all the elements are equally spaced by $h=x_{n+1}-x_{n}\, ,\; \forall\, n=0,...,N-1$, for the first derivative:
@@ -36,8 +36,8 @@ Rewritten using the index notation $x_n$ and $f_n = f(x_n)$ and assuming that al
 $$
 f_{n}' = \begin{cases}\tag{2.5a-c}
 \displaystyle \frac{f_{n+1} - f_{n-1}}{2h} + O(h^2) \\[10pt]
-\displaystyle \frac{f_{n+1} - f_n}{h}  + o(h)  \\[10pt]
-\displaystyle \frac{f_{n} - f_{n-1}}{h}  + o(h)  \\[10pt]
+\displaystyle \frac{f_{n+1} - f_n}{h}  + O(h)  \\[10pt]
+\displaystyle \frac{f_{n} - f_{n-1}}{h}  + O(h)  \\[10pt]
 \end{cases}
 $$
 
@@ -45,14 +45,48 @@ and for the second:
 
 $$
 f_{n}'' = \begin{cases}\tag{3.2a-c}
-\displaystyle \frac{f_{n+1} - 2f_n + f_{n-1}}{h^2} + o(h^2) \\[10pt]
-\displaystyle \frac{f_{n+2} - 2f_{n+1} + f_{n} }{h^2} + o(h)  \\[10pt]
-\displaystyle \frac{f_{n} - 2f_{n-1} + f_{n-2} }{h^2} + o(h)  \\[10pt]
+\displaystyle \frac{f_{n+1} - 2f_n + f_{n-1}}{h^2} + O(h^2) \\[10pt]
+\displaystyle \frac{f_{n+2} - 2f_{n+1} + f_{n} }{h^2} + O(h)  \\[10pt]
+\displaystyle \frac{f_{n} - 2f_{n-1} + f_{n-2} }{h^2} + O(h)  \\[10pt]
 \end{cases}
 $$
 
 
 
+
+## Remminder: big-$o$ and little-$o$ notation
+
+We remind the definitions of big-$O$ and little-$o$. In this article, we focus only on
+real numbers with the limit $\rightarrow 0$, so we will show their definitions in this context.
+
+
+**Big-$O$** Given two real functions ${\displaystyle f, g:\mathbb{R} \to \mathbb{R} }$, we define $f$ as big-$O$ of $g$ if, in the limit $x \rightarrow 0$, there exists a positive real number $M \in (0,+\infty)$ such that, for $x \rightarrow 0$
+
+$$
+f(x) = O(g(x)) \quad \iff \quad \exist\, M\in(0,+\infty): \quad \lim_{x \rightarrow 0}\left|\frac{f(x)}{g(x)}\right| \leq M
+$$
+
+In simpler words: _"$O(x)$ is something that, divided by $x$, is like a constant $c$"._
+
+
+**Small-$O$** Given two real functions ${\displaystyle f, g:\mathbb{R} \to \mathbb{R} }$, we define $f$ as small-$o$ of $g$ if, in the limit $x \rightarrow 0$, their ratio goes to zero too:
+
+$$
+f(x) = o(g(x)) \quad \iff \quad \lim_{x \rightarrow 0} \left|\frac{f(x)}{g(x)}\right| =0
+$$
+
+In simpler words: _"$o(x)$ is something that, divided by $x$, goes to $0$"._
+
+Their relation is not always trivial: you cannot replace mechanically $o(h^p)$ with $O(h^{p+1})$; e.g.,
+if we consider a quantity $h \rightarrow 0$:
+
+$$
+h^{3/2}=o(h), \qquad h^{3/2}\ne O(h^2).
+$$
+
+The first statement follows because $h^{3/2}/h\to0$; the second is false because $h^{3/2}/h^2\to\infty$.
+
+For finite differences, however, the leading error is often proportional to integer powers of $h$ (like $h$, $h^2$, $h^3$ etc), so the relation $o(h^p) = O(h^{p+1})$ holds in this context.
 
 ## Taylor's theorem
 
@@ -160,23 +194,29 @@ $$
     \frac{\Delta_h[f](x)}{h} - f'(x) 
         &= \frac{f(x+h) - f(x)}{h} - f'(x)  \\[10pt]
         &= \frac{1}{h}\bigg\{
-            \left[\cancel{f(x)} + h \, f'(x) + o(h) \right] - \cancel{f(x)}
+            \left[\cancel{f(x)} + h \, f'(x) + \tfrac{h^2}{2}f''(x)+o(h^2) \right] - \cancel{f(x)}
             \bigg\} - f'(x)  \\[10pt]
-        &= o(h) \\[15pt]    
+        &= \tfrac{h}{2}f''(x)+o(h^2) \\[15pt]    
+        &= O(h) \quad\mathrm{and} \quad =o(1) \\[15pt]    
     \frac{\nabla_h[f](x)}{h} - f'(x) 
         &= \frac{f(x) - f(x-h)}{h} - f'(x)  \\[10pt]
         &= \frac{1}{h}\bigg\{
-                \cancel{f(x)} - \left[\cancel{f(x)} - h \, f'(x) + o(h)\right]\bigg\} - f'(x)  \\[10pt]
-        &= o(h) \\[15pt]
+            \cancel{f(x)} - \left[\cancel{f(x)} - h \, f'(x) + \tfrac{h^2}{2}f''(x)+o(h^2) \right]\bigg\} - f'(x)  \\[10pt]
+        &= \tfrac{h}{2}f''(x)+o(h^2) \\[15pt]    
+        &= O(h) \quad\mathrm{and} \quad =o(1) \\[15pt]    
     \frac{\delta_h[f](x)}{h} - f'(x) 
         &= \frac{1}{h}\left[f\left(x+\frac{h}{2}\right) - f\left(x-\frac{h}{2}\right)\right] - f'(x)  \\[10pt]
         &= \frac{1}{h}\bigg\{
-            \left[\cancel{f(x)} + \frac{h}{2} \, f'(x) + \cancel{\frac{h^2}{8} f''(x)} + o(h^2)\right]-\\[15pt]
+            \left[\cancel{f(x)} + \frac{h}{2} \, f'(x) + \cancel{\frac{h^2}{8} f''(x)} 
+                + \frac{h^3}{48} f'''(x)+ o(h^3)\right]-\\[15pt]
             &\quad\quad\;
-            \left[\cancel{f(x)} - \frac{h}{2} \, f'(x) + \cancel{\frac{h^2}{8} f''(x)} + o(h^2)\right]
+            \left[\cancel{f(x)} - \frac{h}{2} \, f'(x) + \cancel{\frac{h^2}{8} f''(x)} 
+                - \frac{h^3}{48} f'''(x)+ o(h^3)\right]
                 \bigg\} - f'(x)  \\[10pt]
-        &= \frac{1}{h} \left[ 2\,\frac{h}{2} \, f'(x) + o(h^2)\right] - f'(x)\\[15pt]
-        &= o(h^2) \\[20pt]
+        &= \frac{1}{h} \left[ 
+            2\,\frac{h}{2} \, f'(x) + 2\,\frac{h^3}{48} f'''(x) + o(h^3)\right] - f'(x)\\[15pt]
+        &= \tfrac{h^2}{2}f'''(x) + o(h^3) \\[15pt]    
+        &= O(h^2) \quad\mathrm{and} \quad = o(h) \\[15pt]
 \end{align*}
 $$
 
@@ -184,9 +224,9 @@ To summarize:
 
 $$
 \begin{align}
-f'(x) &= \frac{\delta_h[f](x)}{h} + o(h^2) \; , \quad \quad \delta_h[f](x) := f(x+\tfrac{h}{2}) - f(x-\tfrac{h}{2}) \tag{2.4a} \\[10pt]
-f'(x) &= \frac{\Delta_h[f](x)}{h} + o(h) \; , \quad \quad \Delta_h[f](x) := f(x+h) - f(x) \tag{2.4b}\\[10pt]
-f'(x) &= \frac{\nabla_h[f](x)}{h} + o(h) \; , \quad \quad \nabla_h[f](x) := f(x) - f(x-h) \tag{2.4c}\\[10pt]
+f'(x) &= \frac{\delta_h[f](x)}{h} + O(h^2) \; , \quad \quad \delta_h[f](x) := f(x+\tfrac{h}{2}) - f(x-\tfrac{h}{2}) \tag{2.4a} \\[10pt]
+f'(x) &= \frac{\Delta_h[f](x)}{h} + O(h) \; , \quad \quad \Delta_h[f](x) := f(x+h) - f(x) \tag{2.4b}\\[10pt]
+f'(x) &= \frac{\nabla_h[f](x)}{h} + O(h) \; , \quad \quad \nabla_h[f](x) := f(x) - f(x-h) \tag{2.4c}\\[10pt]
 \end{align}
 $$
 
@@ -194,8 +234,8 @@ Rewritten using the index notation $x_n$ and $f_n = f(x_n)$ and assuming that al
 
 $$
 \begin{align}
-f_{n}' &= \frac{f_{n+1} - f_n}{h} + o(h) \tag{2.5b}\\[10pt]
-f_{n}' &= \frac{f_{n} - f_{n-1}}{h} + o(h) \tag{2.5c} \\[10pt]
+f_{n}' &= \frac{f_{n+1} - f_n}{h} + O(h) \tag{2.5b}\\[10pt]
+f_{n}' &= \frac{f_{n} - f_{n-1}}{h} + O(h) \tag{2.5c} \\[10pt]
 \end{align}
 $$
 
@@ -245,19 +285,19 @@ In an analogous way, one can obtain finite difference approximations to higher o
 For example, by using the above central difference formula for $f'(x + ⁠h/2⁠)$ and $f'(x − ⁠h/2⁠)$ and applying a central difference formula for the derivative of $f'$ at ${x}$, we obtain the central difference approximation of ${f''}$:
 
 $$
-f'\left(x+\frac{h}{2}\right) = \frac{f(x+h) - f(x)}{h} + o(h^2) \quad , \quad \quad
-f'\left(x-\frac{h}{2}\right) = \frac{f(x) - f(x-h)}{h} + o(h^2) \\[18pt]
+f'\left(x+\frac{h}{2}\right) = \frac{f(x+h) - f(x)}{h} + O(h^2) \quad , \quad \quad
+f'\left(x-\frac{h}{2}\right) = \frac{f(x) - f(x-h)}{h} + O(h^2) \\[18pt]
 $$
 
 $$
 \begin{align*}
 \Rightarrow f''(x) &= 
-    \frac{1}{h}\left[f'\left(x+\frac{h}{2}\right) - f'\left(x-\frac{h}{2}\right)\right] + o(h^2) \\[15pt]
+    \frac{1}{h}\left[f'\left(x+\frac{h}{2}\right) - f'\left(x-\frac{h}{2}\right)\right] + O(h^2) \\[15pt]
     &=\frac{1}{h}\left[
         \frac{f(x+h) - f(x)}{h} - \frac{f(x) - f(x-h)}{h}
-    \right] + o(h^2) \\[15pt]
+    \right] + O(h^2) \\[15pt]
     &= \frac{f(x+h) - 2\,f(x) + f(x-h)}{h^2} 
-     + o(h^2) \\[15pt]
+     + O(h^2) \\[15pt]
 \end{align*}
 $$
 
@@ -266,19 +306,19 @@ Analogously for backward and forward differences:
 $$
 \begin{align*}
 f''(x) &= 
-    \frac{1}{h}\left[f'(x+h) - f'(x)\right] + o(h) \\[15pt]
+    \frac{1}{h}\left[f'(x+h) - f'(x)\right] + O(h) \\[15pt]
     &=\frac{1}{h}\left[
         \frac{f(x+2h) - f(x+h)}{h} - \frac{f(x+h) - f(x)}{h}
-    \right] + o(h) \\[15pt]
+    \right] + O(h) \\[15pt]
     &= \frac{f(x+2h) - 2\,f(x+h) + f(x)}{h^2} 
-     + o(h) \\[15pt]
+     + O(h) \\[15pt]
 f''(x) &= 
-    \frac{1}{h}\left[f'(x) - f'(x-h)\right] + o(h) \\[15pt]
+    \frac{1}{h}\left[f'(x) - f'(x-h)\right] + O(h) \\[15pt]
     &=\frac{1}{h}\left[
         \frac{f(x) - f(x-h)}{h} - \frac{f(x-h) - f(x-2h)}{h}
-    \right] + o(h) \\[15pt]
+    \right] + O(h) \\[15pt]
     &= \frac{f(x) - 2\,f(x-h) + f(x-2h)}{h^2} 
-     + o(h) \\[15pt]
+     + O(h) \\[15pt]
 \end{align*}
 $$
 
@@ -291,21 +331,21 @@ $$
     &= g_h(x+h)-g_h(x) \\[10pt]
     &=\left[ f(x+2h) - f(x+h)\right] - \left[ f(x+h) - f(x)\right] \\[10pt]
     &=f(x+2h) - 2\,f(x+h) + f(x) \\[10pt]
-\Rightarrow \quad f''(x) &= \frac{\Delta^2_h[f](x)}{h^2} + o(h) \\[15pt]
+\Rightarrow \quad f''(x) &= \frac{\Delta^2_h[f](x)}{h^2} + O(h) \\[15pt]
 
 \nabla^2_h[f](x) &:=  \nabla_h[\nabla_h[f]](x)  \\[10pt]
     &= \nabla_h[g_h](x) \quad , \quad \quad g_h(x):=f(x)-f(x-h) \\[10pt]
     &= g_h(x)-g_h(x-h) \\[10pt]
     &=\left[ f(x) - f(x-h)\right] - \left[ f(x-h) - f(x-2h)\right] \\[10pt]
     &=f(x) - 2\,f(x-h) + f(x-2h) \\[10pt]
-\Rightarrow \quad f''(x) &= \frac{\nabla^2_h[f](x)}{h^2} + o(h) \\[15pt]
+\Rightarrow \quad f''(x) &= \frac{\nabla^2_h[f](x)}{h^2} + O(h) \\[15pt]
 
 \delta^2_h[f](x) &:=  \delta_h[\delta_h[f]](x)  \\[10pt]
     &= \delta_h[g_h](x) \quad , \quad \quad g_h(x):=f(x+\tfrac{h}{2})-f(x-\tfrac{h}{2}) \\[10pt]
     &= g_h(x+\tfrac{h}{2})-g_h(x-\tfrac{h}{2}) \\[10pt]
     &=\left[ f(x+h) - f(x)\right] - \left[ f(x) - f(x-h)\right] \\[10pt]
     &=f(x+h) - 2\,f(x) + f(x-h) \\[10pt]
-\Rightarrow \quad f''(x) &= \frac{\delta^2_h[f](x)}{h^2} + o(h^2) \\[15pt]
+\Rightarrow \quad f''(x) &= \frac{\delta^2_h[f](x)}{h^2} + O(h^2) \\[15pt]
 \end{align*}
 $$
 
@@ -313,9 +353,9 @@ So, to summarize:
 
 $$
 \begin{align}
-f''(x) &= \frac{\delta^2_h[f](x)}{h^2} + o(h^2) \; , \quad \quad \delta^2_h[f](x) = f(x+h) - 2\,f(x) + f(x-h) \tag{3.1a}\\[8pt]
-f''(x) &= \frac{\Delta^2_h[f](x)}{h^2} + o(h) \; , \quad \quad \Delta^2_h[f](x) = f(x+2h) - 2\,f(x+h) + f(x)    \tag{3.1b}\\[8pt]
-f''(x) &= \frac{\nabla^2_h[f](x)}{h^2} + o(h) \; , \quad \quad \nabla^2_h[f](x) = f(x) - 2\,f(x-h) + f(x-2h)    \tag{3.1c}\\[8pt] 
+f''(x) &= \frac{\delta^2_h[f](x)}{h^2} + O(h^2) \; , \quad \quad \delta^2_h[f](x) = f(x+h) - 2\,f(x) + f(x-h) \tag{3.1a}\\[8pt]
+f''(x) &= \frac{\Delta^2_h[f](x)}{h^2} + O(h) \; , \quad \quad \Delta^2_h[f](x) = f(x+2h) - 2\,f(x+h) + f(x)    \tag{3.1b}\\[8pt]
+f''(x) &= \frac{\nabla^2_h[f](x)}{h^2} + O(h) \; , \quad \quad \nabla^2_h[f](x) = f(x) - 2\,f(x-h) + f(x-2h)    \tag{3.1c}\\[8pt] 
 \end{align}
 $$
 
@@ -324,9 +364,9 @@ Rewritten using the index notation $x_n$ and $f_n = f(x_n)$ and assuming that al
 
 $$
 \begin{align}
-f_{n}'' &= \frac{f_{n+1} - 2f_n + f_{n-1}}{h^2} + o(h^2) \tag{3.2a}\\[10pt]
-f_{n}'' &= \frac{f_{n+2} - 2f_{n+1} + f_{n} }{h^2} + o(h) \tag{3.2b} \\[10pt]
-f_{n}'' &= \frac{f_{n} - 2f_{n-1} + f_{n-2} }{h^2} + o(h) \tag{3.2c} \\[10pt]
+f_{n}'' &= \frac{f_{n+1} - 2f_n + f_{n-1}}{h^2} + O(h^2) \tag{3.2a}\\[10pt]
+f_{n}'' &= \frac{f_{n+2} - 2f_{n+1} + f_{n} }{h^2} + O(h) \tag{3.2b} \\[10pt]
+f_{n}'' &= \frac{f_{n} - 2f_{n-1} + f_{n-2} }{h^2} + O(h) \tag{3.2c} \\[10pt]
 \end{align}
 $$
 
@@ -337,13 +377,13 @@ More generally, the $n$-th order forward, backward, and central differences are 
 
 $$
 \begin{align}
-\frac{\mathrm{d}^{n}f}{\mathrm{d}x^n}(x) = \frac{\delta_h^n[f](x)}{h^n}+o(h^2) 
+\frac{\mathrm{d}^{n}f}{\mathrm{d}x^n}(x) = \frac{\delta_h^n[f](x)}{h^n} + O(h^2) 
 \; , \quad \quad 
 \delta_h^n[f](x) &= \sum_{j=0}^n (-1)^{j}  \, \binom{n}{j} \, f(x+(\tfrac{n}{2}-j)h) \tag{4.1a}\\[15pt]
-\frac{\mathrm{d}^{n}f}{\mathrm{d}x^n}(x) = \frac{\Delta_h^n[f](x)}{h^n}+o(h) 
+\frac{\mathrm{d}^{n}f}{\mathrm{d}x^n}(x) = \frac{\Delta_h^n[f](x)}{h^n} + O(h) 
 \; , \quad \quad 
 \Delta_h^n[f](x) &= \sum_{j=0}^n (-1)^{n-j}\, \binom{n}{j} \, f(x+jh) \tag{4.1b}\\[10pt]
-\frac{\mathrm{d}^{n}f}{\mathrm{d}x^n}(x) = \frac{\nabla_h^n[f](x)}{h^n}+o(h) 
+\frac{\mathrm{d}^{n}f}{\mathrm{d}x^n}(x) = \frac{\nabla_h^n[f](x)}{h^n} + O(h) 
 \; , \quad \quad 
 \nabla_h^n[f](x) &= \sum_{j=0}^n (-1)^{j}  \, \binom{n}{j} \, f(x-jh) \tag{4.1c}\\[15pt]
 \binom{n}{j} :&= \frac{n!}{j!(n-j)!} \notag
