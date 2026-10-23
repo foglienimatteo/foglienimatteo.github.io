@@ -54,7 +54,7 @@ $$
 
 
 
-## Remminder: big-$o$ and little-$o$ notation
+## Reminder: big-$o$ and little-$o$ notation
 
 We remind the definitions of big-$O$ and little-$o$. In this article, we focus only on
 real numbers with the limit $\rightarrow 0$, so we will show their definitions in this context.
@@ -63,13 +63,13 @@ real numbers with the limit $\rightarrow 0$, so we will show their definitions i
 **Big-$O$** Given two real functions ${\displaystyle f, g:\mathbb{R} \to \mathbb{R} }$, we define $f$ as big-$O$ of $g$ if, in the limit $x \rightarrow 0$, there exists a positive real number $M \in (0,+\infty)$ such that, for $x \rightarrow 0$
 
 $$
-f(x) = O(g(x)) \quad \iff \quad \exist\, M\in(0,+\infty): \quad \lim_{x \rightarrow 0}\left|\frac{f(x)}{g(x)}\right| \leq M
+f(x) = O(g(x)) \quad \iff \quad \exist\, M, \delta \in(0,+\infty): \quad \left|\frac{f(x)}{g(x)}\right| \leq M \; , \quad \forall\,  0 \leq |x| \leq \delta
 $$
 
 In simpler words: _"$O(x)$ is something that, divided by $x$, is like a constant $c$"._
 
 
-**Small-$O$** Given two real functions ${\displaystyle f, g:\mathbb{R} \to \mathbb{R} }$, we define $f$ as small-$o$ of $g$ if, in the limit $x \rightarrow 0$, their ratio goes to zero too:
+**Little-$o$** Given two real functions ${\displaystyle f, g:\mathbb{R} \to \mathbb{R} }$, we define $f$ as little-$o$ of $g$ if, in the limit $x \rightarrow 0$, their ratio goes to zero:
 
 $$
 f(x) = o(g(x)) \quad \iff \quad \lim_{x \rightarrow 0} \left|\frac{f(x)}{g(x)}\right| =0
@@ -156,8 +156,8 @@ f'(x) := \lim_{h \rightarrow 0} \frac{f(x+h)-f(x)}{h}
 \tag{2.1a}
 $$
 
-More precively, it is said that the derivative $f$ at a point $x$ is the limit in (2.1a) if both the
-right limit and the left limit exists, are finite and coincide, and such value is the limit of (2.1a)
+More precicely, it is said that the derivative $f$ at a point $x$ is the limit in (2.1a) if both the
+right and the limit exists, are finite and coincide, and such value is the limit of (2.1a)
 
 $$
 a := \lim_{h \rightarrow 0^{+}} \frac{f(x+h)-f(x)}{h}
@@ -282,43 +282,66 @@ $$
 ## Second order finite differences
 
 In an analogous way, one can obtain finite difference approximations to higher order derivatives and differential operators. 
-For example, by using the above central difference formula for $f'(x + ⁠h/2⁠)$ and $f'(x − ⁠h/2⁠)$ and applying a central difference formula for the derivative of $f'$ at ${x}$, we obtain the central difference approximation of ${f''}$:
+
 
 $$
-f'\left(x+\frac{h}{2}\right) = \frac{f(x+h) - f(x)}{h} + O(h^2) \quad , \quad \quad
-f'\left(x-\frac{h}{2}\right) = \frac{f(x) - f(x-h)}{h} + O(h^2) \\[18pt]
+\begin{cases}
+\displaystyle f(x+h) = 
+    f(x) + h\,f'(x) + \frac{h^2}{2} f''(x) + \frac{h^3}{6} f'''(x) + \frac{h^4}{24} f''''(x) + O(h^5) \\[12pt]
+\displaystyle f(x-h) = 
+    f(x) - h\,f'(x) + \frac{h^2}{2} f''(x) - \frac{h^3}{6} f'''(x) + \frac{h^4}{24} f''''(x) + O(h^5)
+\end{cases}
 $$
 
 $$
 \begin{align*}
-\Rightarrow f''(x) &= 
-    \frac{1}{h}\left[f'\left(x+\frac{h}{2}\right) - f'\left(x-\frac{h}{2}\right)\right] + O(h^2) \\[15pt]
-    &=\frac{1}{h}\left[
-        \frac{f(x+h) - f(x)}{h} - \frac{f(x) - f(x-h)}{h}
-    \right] + O(h^2) \\[15pt]
-    &= \frac{f(x+h) - 2\,f(x) + f(x-h)}{h^2} 
-     + O(h^2) \\[15pt]
+\Rightarrow f(x+h) + f(x-h) &= 2\,f(x) + h^2 f''(x)  + \frac{h^4}{12} f''''(x) + O(h^5) \\[12pt]
+\Rightarrow h^2 f''(x) &= f(x+h) - 2 \, f(x)+ f(x-h) - \frac{h^4}{12} f''''(x) + O(h^5) \\[12pt]
+\Rightarrow f''(x) &= \frac{f(x+h) - 2 \, f(x)+ f(x-h)}{h^2} - \frac{h^2}{12} f''''(x) + O(h^3) \\[12pt]
+&= \frac{f(x+h) - 2 \, f(x)+ f(x-h)}{h^2} + O(h^2) \\[12pt]
+&= \frac{f(x+h) - 2 \, f(x)+ f(x-h)}{h^2} + o(h) \\[12pt]
 \end{align*}
 $$
 
+
+
 Analogously for backward and forward differences:
+
+
+$$
+\begin{cases}
+\displaystyle f(x+2h) = f(x) + 2\,h\,f'(x) + 2 \, h^2 f''(x) + \frac{4h^3}{3} f'''(x) + O(h^4) \\[12pt]
+\displaystyle f(x+h) = 
+    f(x) + h\,f'(x) + \frac{h^2}{2} f''(x) + \frac{h^3}{6} f'''(x) + O(h^4)
+\end{cases}
+$$
 
 $$
 \begin{align*}
-f''(x) &= 
-    \frac{1}{h}\left[f'(x+h) - f'(x)\right] + O(h) \\[15pt]
-    &=\frac{1}{h}\left[
-        \frac{f(x+2h) - f(x+h)}{h} - \frac{f(x+h) - f(x)}{h}
-    \right] + O(h) \\[15pt]
-    &= \frac{f(x+2h) - 2\,f(x+h) + f(x)}{h^2} 
-     + O(h) \\[15pt]
-f''(x) &= 
-    \frac{1}{h}\left[f'(x) - f'(x-h)\right] + O(h) \\[15pt]
-    &=\frac{1}{h}\left[
-        \frac{f(x) - f(x-h)}{h} - \frac{f(x-h) - f(x-2h)}{h}
-    \right] + O(h) \\[15pt]
-    &= \frac{f(x) - 2\,f(x-h) + f(x-2h)}{h^2} 
-     + O(h) \\[15pt]
+\Rightarrow f(x+2h) - 2\,f(x+h) &= -\,f(x) + h^2 f''(x)  + h^3 f'''(x) + O(h^4) \\[12pt]
+\Rightarrow h^2 f''(x) &= f(x+2h) - 2 \, f(x+h) + f(x) - h^3 f'''(x) + O(h^4) \\[12pt]
+\Rightarrow f''(x) &= \frac{f(x+2h) - 2 \, f(x+h)+ f(x)}{h^2} - h\, f'''(x) + O(h^2) \\[12pt]
+&= \frac{f(x+2h) - 2 \, f(x+h)+ f(x)}{h^2} + O(h) \\[12pt]
+&= \frac{f(x+2h) - 2 \, f(x+h)+ f(x)}{h^2} + o(1) \\[12pt]
+\end{align*}
+$$
+
+
+$$
+\begin{cases}
+\displaystyle f(x-2h) = f(x) - 2\,h\,f'(x) + 2 \, h^2 f''(x) - \frac{4h^3}{3} f'''(x) + O(h^4) \\[12pt]
+\displaystyle f(x-h) = 
+    f(x) - h\,f'(x) + \frac{h^2}{2} f''(x) - \frac{h^3}{6} f'''(x) + O(h^4)
+\end{cases}
+$$
+
+$$
+\begin{align*}
+\Rightarrow f(x-2h) - 2\,f(x-h) &= -\,f(x) + h^2 f''(x)  - h^3 f'''(x) + O(h^4) \\[12pt]
+\Rightarrow h^2 f''(x) &= f(x) - 2 \, f(x-h) + f(x-2h) + h^3 f'''(x) + O(h^4) \\[12pt]
+\Rightarrow f''(x) &= \frac{f(x) - 2 \, f(x-h)+ f(x-2h)}{h^2} + h\, f'''(x) + O(h^2) \\[12pt]
+&= \frac{f(x) - 2 \, f(x-h)+ f(x-2h)}{h^2} + O(h) \\[12pt]
+&= \frac{f(x) - 2 \, f(x-h)+ f(x-2h)}{h^2} + o(1) \\[12pt]
 \end{align*}
 $$
 
