@@ -22,10 +22,10 @@ $right-sidebar-width: 280px;
 // Stock ladder is 16 / 18 / 20 / 22px. Flattened, then nudged back up: at
 // 19px the 36rem column below measured 91 characters per line, well past the
 // 45-75 that reads comfortably.
-$doc-font-size: 16px; //18px;               // phone
-$doc-font-size-medium: 17px; //19px;        // ≥768px
-$doc-font-size-large: 18px; //20px;         // ≥1024px
-$doc-font-size-x-large: 19px; //21px;       // ≥1280px
+$doc-font-size: 15px; //18px;               // phone
+$doc-font-size-medium: 16px; //19px;        // ≥768px
+$doc-font-size-large: 17px; //20px;         // ≥1024px
+$doc-font-size-x-large: 18px; //21px;       // ≥1280px
 
 // Line length for running prose, and the one knob for "too thin" / "too
 // wide". Because it is in rem it fixes the line length in CHARACTERS, not in
@@ -37,7 +37,7 @@ $doc-font-size-x-large: 19px; //21px;       // ≥1280px
 // rem, not em: em resolves against each element's OWN font-size, so the same
 // value would cap an h1 at more than twice the width of a paragraph.
 // Display math, code, figures and tables are deliberately NOT capped to it.
-$content-measure: 45rem; // 36rem;
+$content-measure: 50rem; // 36rem;
 
 // Height of an embedded PDF preview card. Capped by HEIGHT, not width, so a
 // portrait A0 poster and a landscape slide both come out a sensible size.
