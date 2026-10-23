@@ -196,13 +196,13 @@ $$
         &= \frac{1}{h}\bigg\{
             \left[\cancel{f(x)} + h \, f'(x) + \tfrac{h^2}{2}f''(x)+o(h^2) \right] - \cancel{f(x)}
             \bigg\} - f'(x)  \\[10pt]
-        &= \tfrac{h}{2}f''(x)+o(h^2) \\[15pt]    
+        &= \tfrac{h}{2}f''(x)+o(h) \\[15pt]    
         &= O(h) \quad\mathrm{and} \quad =o(1) \\[15pt]    
     \frac{\nabla_h[f](x)}{h} - f'(x) 
         &= \frac{f(x) - f(x-h)}{h} - f'(x)  \\[10pt]
         &= \frac{1}{h}\bigg\{
             \cancel{f(x)} - \left[\cancel{f(x)} - h \, f'(x) + \tfrac{h^2}{2}f''(x)+o(h^2) \right]\bigg\} - f'(x)  \\[10pt]
-        &= \tfrac{h}{2}f''(x)+o(h^2) \\[15pt]    
+        &= \tfrac{h}{2}f''(x)+o(h) \\[15pt]    
         &= O(h) \quad\mathrm{and} \quad =o(1) \\[15pt]    
     \frac{\delta_h[f](x)}{h} - f'(x) 
         &= \frac{1}{h}\left[f\left(x+\frac{h}{2}\right) - f\left(x-\frac{h}{2}\right)\right] - f'(x)  \\[10pt]
@@ -215,7 +215,7 @@ $$
                 \bigg\} - f'(x)  \\[10pt]
         &= \frac{1}{h} \left[ 
             2\,\frac{h}{2} \, f'(x) + 2\,\frac{h^3}{48} f'''(x) + o(h^3)\right] - f'(x)\\[15pt]
-        &= \tfrac{h^2}{2}f'''(x) + o(h^3) \\[15pt]    
+        &= \tfrac{h^2}{24}f'''(x) + o(h^2) \\[15pt]    
         &= O(h^2) \quad\mathrm{and} \quad = o(h) \\[15pt]
 \end{align*}
 $$
