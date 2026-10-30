@@ -335,7 +335,7 @@ Eq.(2.8) is a two-step recursion: to compute $y_{n+1}$ we need the two previous 
 
 **Assumption**: As initial conditions we know the value $y_0 = y(x_0)$, which gives $F_0 = U_0 + V_0\,y_0$, and the slope $y'_0 = y'(x_0)$. Without loss of generality, $x_0 = 0$.
 
-How accurate must $y_1$ be? To compute $y_2$ at $O(h^6)$ with Eq.(2.8), we would need $y_1$ with the same accuracy. However, it is sufficient to compute $y_1$ with a precision $O(h^5)$: $y_1$ is computed only once, and its error would be still smaller than the global one.
+How accurate must $y_1$ be? To compute $y_2$ at $O(h^6)$ with Eq.(2.8), we would need $y_1$ with the same accuracy. However, it is sufficient to compute $y_1$ with a precision $O(h^5)$: $y_1$ is computed only once, and a single error, injected once, grows only linearly, which means that its globally propagated error $N \cdot O(h^5) = O(h^4)$ would be still of the same order of the global error.
 
 The best we can do from scratch, without any analytical differentiation, is to Taylor-expand $y_1$ about $x_0$, using $y'' = F$, $y''' = F'$ and $y^{(4)} = F''$:
 
