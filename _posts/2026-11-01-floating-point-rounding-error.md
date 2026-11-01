@@ -27,7 +27,7 @@ References:
 
 ## TL;DR
 
-Notation: $\oplus, \ominus, \otimes, \oslash$, etc are the computed operations; $\mathrm{LN}$, $\mathrm{SQRT}$, $\mathrm{EXP}$, etc are the computed functions. For a real number $x$ approximated by $\tilde{x}$, $\mathrm{aerr}(x, \tilde{x}) = \abs{\tilde{x} - x}$ is the absolute error and $\mathrm{rerr}(x, \tilde{x}) = \abs{\tilde{x} - x}/\abs{x}$ the relative error (Section 2.1).
+Notation: $\oplus, \ominus, \otimes, \oslash$, etc are the computed operations; $\mathrm{LN}$, $\mathrm{SQRT}$, $\mathrm{EXP}$, etc are the computed functions. For a real number $x$ approximated by $\tilde{x}$, $\mathrm{aerr}(x, \tilde{x}) = \lvert \tilde{x} - x \rvert$ is the absolute error and $\mathrm{rerr}(x, \tilde{x}) = \lvert \tilde{x} - x \rvert/\lvert x \rvert$ the relative error (Section 2.1).
 
 A floating-point number $x$ with base $\beta$ and precision $p$ can be written normalized (i.e. with first significant digit non-zero) as:
 
@@ -229,16 +229,16 @@ For example, with $\beta = 10$ and $p = 3$, one ulp of $3.12 \times 10^{-2}$ is 
 **Absolute error**: if the floating-point number $\tilde{x} = d_0.d_1 \cdots d_{p-1} \times \beta^e$ is used to represent the real number $x$, it is in error by
 
 $$
-\mathrm{aerr}(x, \tilde{x}) := \abs{\tilde{x} - x}
+\mathrm{aerr}(x, \tilde{x}) := |\tilde{x} - x|
 \tag{2.1b}
 $$
 
-It is often convenient to measure the absolute error in ulps, i.e. to use $\mathrm{ulp}[\beta,\,p,\,e]$ as the unit of measure: $\mathrm{aerr}(x, \tilde{x}) = n$ ulps means $\abs{\tilde{x} - x} = n \times \mathrm{ulp}[\beta,\,p,\,e]$. Dividing Eq.(2.1b) by Eq.(2.1a), and using $\tilde{x}/\beta^e = d_0.d_1 \cdots d_{p-1}$:
+It is often convenient to measure the absolute error in ulps, i.e. to use $\mathrm{ulp}[\beta,\,p,\,e]$ as the unit of measure: $\mathrm{aerr}(x, \tilde{x}) = n$ ulps means $\lvert \tilde{x} - x \rvert = n \times \mathrm{ulp}[\beta,\,p,\,e]$. Dividing Eq.(2.1b) by Eq.(2.1a), and using $\tilde{x}/\beta^e = d_0.d_1 \cdots d_{p-1}$:
 
 $$
 \mathrm{aerr}(x, \tilde{x})
-= \frac{\abs{\tilde{x} - x}}{\beta^{e - p + 1}} \; \mathrm{ulps}
-= \abs{d_0.d_1 \cdots d_{p-1} - \frac{x}{\beta^e}}\,\beta^{p-1} \; \mathrm{ulps}
+= \frac{|\tilde{x} - x|}{\beta^{e - p + 1}} \; \mathrm{ulps}
+= \left| d_0.d_1 \cdots d_{p-1} - \frac{x}{\beta^e} \right|\,\beta^{p-1} \; \mathrm{ulps}
 \tag{2.1c}
 $$
 
@@ -247,10 +247,10 @@ as long as $\beta^{e_{\min}} \le x \le \beta^{e_{\max} + 1}$. Note that the expo
 $$
 \begin{align*}
 &\tilde{x} = 3.12 \times 10^{-2} \; , \; x = 0.0314 \, : 
-&\mathrm{aerr}(x, \tilde{x}) &= \abs{3.12 - 3.14} \times 10^{2} \; \mathrm{ulps} \\
+&\mathrm{aerr}(x, \tilde{x}) &= |3.12 - 3.14| \times 10^{2} \; \mathrm{ulps} \\
 &&&= 2 \; \mathrm{ulps} = 2 \times 10^{-4} \\[6pt]
 &\tilde{x} = 3.14 \times 10^{-2} \; , \; x = 0.0314159 \, : 
-&\mathrm{aerr}(x, \tilde{x}) &= \abs{3.14 - 3.14159} \times 10^{2} \; \mathrm{ulps} \\
+&\mathrm{aerr}(x, \tilde{x}) &= |3.14 - 3.14159| \times 10^{2} \; \mathrm{ulps} \\
 &&&= 0.159 \; \mathrm{ulps} = 1.59 \times 10^{-5}
 \end{align*}
 $$
@@ -260,7 +260,7 @@ If $\tilde{x}$ is the floating-point number nearest to $x$, it can still be in e
 **Relative error**: another way to measure the difference between a floating-point number $\tilde{x}$ and the real number $x$ it approximates is the _relative error_:
 
 $$
-\mathrm{rerr}(x, \tilde{x}) := \frac{\abs{\tilde{x} - x}}{\abs{x}} = \frac{\mathrm{aerr}(x, \tilde{x})}{\abs{x}}
+\mathrm{rerr}(x, \tilde{x}) := \frac{|\tilde{x} - x|}{|x|} = \frac{\mathrm{aerr}(x, \tilde{x})}{|x|}
 \tag{2.2}
 $$
 
@@ -295,10 +295,10 @@ $$
 That is, the number whose only nonzero digit is $\beta/2$, in the $p$-th position after the point; for $\beta = 10$, $p = 3$ this is $0.005 \times 10^e$.
 **This bound on the absolute error depends on the exponent $e$**: the larger the number, the larger the absolute error committed when rounding it.
 
-The relative error, however, divides the absolute error by $\abs{x}$, which grows with $\beta^e$ too. All the numbers whose closest floating-point number has the form $d_0.d_1d_2 \cdots d_{p-1} \times \beta^e$ lie between $\beta^e$ and $\beta \times \beta^e$,
+The relative error, however, divides the absolute error by $\lvert x \rvert$, which grows with $\beta^e$ too. All the numbers whose closest floating-point number has the form $d_0.d_1d_2 \cdots d_{p-1} \times \beta^e$ lie between $\beta^e$ and $\beta \times \beta^e$,
 
 $$
-\beta^{e} \le \abs{x} \le \beta \times \beta^{e}
+\beta^{e} \le |x| \le \beta \times \beta^{e}
 \tag{2.3b}
 $$
 
@@ -306,19 +306,19 @@ so, by Eq.(2.2), an absolute error of half an ulp corresponds to the relative er
 
 $$
 \mathrm{rerr}(x, \tilde{x})
-= \frac{\mathrm{aerr}(x, \tilde{x})}{\abs{x}}
-= \frac{\frac{1}{2}\,\mathrm{ulp}[\beta,\,p,\,e]}{\abs{x}}
-= \frac{(\beta/2)\,\beta^{-p}\,\beta^{e}}{\abs{x}}
+= \frac{\mathrm{aerr}(x, \tilde{x})}{|x|}
+= \frac{\frac{1}{2}\,\mathrm{ulp}[\beta,\,p,\,e]}{|x|}
+= \frac{(\beta/2)\,\beta^{-p}\,\beta^{e}}{|x|}
 \tag{2.3c}
 $$
 
-which is smallest for the largest $\abs{x}$ of Eq.(2.3b), and largest for the smallest one:
+which is smallest for the largest $\lvert x \rvert$ of Eq.(2.3b), and largest for the smallest one:
 
 $$
 \begin{align*}
-\abs{x} \to \beta \times \beta^{e} \, : &\quad
+|x| \to \beta \times \beta^{e} \, : &\quad
 \mathrm{rerr}_{\min} = \frac{(\beta/2)\,\beta^{-p}\,\beta^{e}}{\beta \times \beta^{e}} = \frac{1}{2}\,\beta^{-p} \\[8pt]
-\abs{x} \to \beta^{e} \, : &\quad
+|x| \to \beta^{e} \, : &\quad
 \mathrm{rerr}_{\max} = \frac{(\beta/2)\,\beta^{-p}\,\beta^{e}}{\beta^{e}} = \frac{\beta}{2}\,\beta^{-p}
 \end{align*}
 \tag{2.3d}
@@ -330,7 +330,7 @@ $$
 \tag{2.3e}
 $$
 
-**The exponent cancels**: in Eq.(2.3c), $\beta^e$ appears both in the numerator (the half ulp) and in the denominator ($\abs{x}$), so the bounds of Eq.(2.3e) depend only on $\beta$ and $p$. What matters is only where $x$ lies between $\beta^e$ and $\beta \times \beta^e$ (for $\beta = 10$: whether its significand is close to $1.00$ or to $9.99$), not how large $x$ is.
+**The exponent cancels**: in Eq.(2.3c), $\beta^e$ appears both in the numerator (the half ulp) and in the denominator ($\lvert x \rvert$), so the bounds of Eq.(2.3e) depend only on $\beta$ and $p$. What matters is only where $x$ lies between $\beta^e$ and $\beta \times \beta^e$ (for $\beta = 10$: whether its significand is close to $1.00$ or to $9.99$), not how large $x$ is.
 [1] writes Eq.(2.3e) as $\frac{1}{2}\,\beta^{-p} \le \frac{1}{2}\,\mathrm{ulp} \le \frac{\beta}{2}\,\beta^{-p}$, where the middle term is a shorthand for "the relative error corresponding to half an ulp": it is not the half ulp of Eq.(2.3a), which does contain $\beta^e$.
 
 With $\beta = 10$ and $p = 3$, the relative size of half an ulp for numbers of very different magnitude:
@@ -388,9 +388,9 @@ Consider the real number $x = 12.35$. It is approximated by $\tilde{x} = 1.24 \t
 
 $$
 \begin{align*}
-\tilde{x} = 1.24 \times 10^{1} \, : &\quad \mathrm{aerr}(x, \tilde{x}) = \abs{1.24 - 1.235} \times 10^{2} \; \mathrm{ulps} = 0.5 \; \mathrm{ulps} \\[4pt]
+\tilde{x} = 1.24 \times 10^{1} \, : &\quad \mathrm{aerr}(x, \tilde{x}) = |1.24 - 1.235| \times 10^{2} \; \mathrm{ulps} = 0.5 \; \mathrm{ulps} \\[4pt]
 &\quad \mathrm{rerr}(x, \tilde{x}) = \frac{0.05}{12.35} = 4.05 \times 10^{-3} = 0.81\,\varepsilon \\[10pt]
-8\tilde{x} = 9.92 \times 10^{1} \, : &\quad \mathrm{aerr}(8x, 8\tilde{x}) = \abs{9.92 - 9.88} \times 10^{2} \; \mathrm{ulps} = 4.0 \; \mathrm{ulps} \\[4pt]
+8\tilde{x} = 9.92 \times 10^{1} \, : &\quad \mathrm{aerr}(8x, 8\tilde{x}) = |9.92 - 9.88| \times 10^{2} \; \mathrm{ulps} = 4.0 \; \mathrm{ulps} \\[4pt]
 &\quad \mathrm{rerr}(8x, 8\tilde{x}) = \frac{0.4}{98.8} = 4.05 \times 10^{-3} = 0.81\,\varepsilon
 \end{align*}
 $$
@@ -458,7 +458,7 @@ The correct answer is $x - y = 0.17 = 1.70 \times 10^{-1}$, so by Eq.(2.1c) and 
 
 $$
 \begin{align*}
-\mathrm{aerr}(x - y,\, x \ominus y) &= \abs{2.00 - 1.70} \times 10^{2} \; \mathrm{ulps} = 30 \; \mathrm{ulps} \\[6pt]
+\mathrm{aerr}(x - y,\, x \ominus y) &= |2.00 - 1.70| \times 10^{2} \; \mathrm{ulps} = 30 \; \mathrm{ulps} \\[6pt]
 \mathrm{rerr}(x - y,\, x \ominus y) &= \frac{0.03}{0.17} = 0.18 = 35\,\varepsilon
 \end{align*}
 $$
@@ -575,7 +575,7 @@ $$
 
 $$
 \begin{align*}
-\mathrm{aerr}(\Delta, \tilde{\Delta}) &= \abs{1.00 - 0.292} \times 10^{2} \; \mathrm{ulps} = 70.8 \approx 70 \; \mathrm{ulps} \\[6pt]
+\mathrm{aerr}(\Delta, \tilde{\Delta}) &= |1.00 - 0.292| \times 10^{2} \; \mathrm{ulps} = 70.8 \approx 70 \; \mathrm{ulps} \\[6pt]
 \mathrm{rerr}(\Delta, \tilde{\Delta}) &= \frac{0.0708}{0.0292} = 2.4 \approx 485\,\varepsilon
 \end{align*}
 $$
@@ -601,7 +601,7 @@ $$
 r_1 = \frac{-b + \sqrt{b^2 - 4ac}}{2a} \, , \qquad r_2 = \frac{-b - \sqrt{b^2 - 4ac}}{2a} \tag{4.1}
 $$
 
-When $b^2 \gg ac$, $b^2 - 4ac$ does not involve a cancellation and $\sqrt{b^2 - 4ac} \approx \abs{b}$. But then the other addition (subtraction) in one of the two formulas, $-b \pm \sqrt{b^2 - 4ac}$, subtracts two nearly equal numbers, and the square root carries a rounding error: a catastrophic cancellation. To avoid it, we multiply the numerator and denominator of $r_1$ by $-b - \sqrt{b^2 - 4ac}$:
+When $b^2 \gg ac$, $b^2 - 4ac$ does not involve a cancellation and $\sqrt{b^2 - 4ac} \approx \lvert b \rvert$. But then the other addition (subtraction) in one of the two formulas, $-b \pm \sqrt{b^2 - 4ac}$, subtracts two nearly equal numbers, and the square root carries a rounding error: a catastrophic cancellation. To avoid it, we multiply the numerator and denominator of $r_1$ by $-b - \sqrt{b^2 - 4ac}$:
 
 $$
 \begin{align*}
@@ -650,14 +650,14 @@ $$
 \end{align*}
 $$
 
-The first result has $\mathrm{aerr} = \abs{1.00 - 0.667} \times 10^{2} = 33.3$ ulps and $\mathrm{rerr} = 0.0333/0.0667 = 0.50$; the second one is exact.
+The first result has $\mathrm{aerr} = \lvert 1.00 - 0.667 \rvert \times 10^{2} = 33.3$ ulps and $\mathrm{rerr} = 0.0333/0.0667 = 0.50$; the second one is exact.
 
-By Theorem 2, the relative error of both $x \ominus y$ and $x \oplus y$ is at most $2\varepsilon$, and multiplying two quantities with a small relative error results in a product with a small relative error (Section 4.1 of [1]): with $\delta_1, \delta_2$ the (signed) relative errors of the subtraction and of the addition, and $\delta_3$ the one of the multiplication, so that $\abs{\delta_1} = \mathrm{rerr}(x - y,\, x \ominus y)$, $\abs{\delta_2} = \mathrm{rerr}(x + y,\, x \oplus y)$, and $\abs{\delta_3} \le \varepsilon$ by Eq.(2.4b),
+By Theorem 2, the relative error of both $x \ominus y$ and $x \oplus y$ is at most $2\varepsilon$, and multiplying two quantities with a small relative error results in a product with a small relative error (Section 4.1 of [1]): with $\delta_1, \delta_2$ the (signed) relative errors of the subtraction and of the addition, and $\delta_3$ the one of the multiplication, so that $\lvert \delta_1 \rvert = \mathrm{rerr}(x - y,\, x \ominus y)$, $\lvert \delta_2 \rvert = \mathrm{rerr}(x + y,\, x \oplus y)$, and $\lvert \delta_3 \rvert \le \varepsilon$ by Eq.(2.4b),
 
 $$
 \begin{align*}
-(x \ominus y) \otimes (x \oplus y) &= (x - y)(1 + \delta_1)\,(x + y)(1 + \delta_2)\,(1 + \delta_3) \, , \qquad \abs{\delta_1}, \abs{\delta_2} \le 2\varepsilon \, , \; \abs{\delta_3} \le \varepsilon \\[6pt]
-&= (x^2 - y^2)\left(1 + \delta_1 + \delta_2 + \delta_3 + O(\varepsilon^2)\right) \, , \qquad \abs{\delta_1 + \delta_2 + \delta_3} \le 5\varepsilon
+(x \ominus y) \otimes (x \oplus y) &= (x - y)(1 + \delta_1)\,(x + y)(1 + \delta_2)\,(1 + \delta_3) \, , \qquad |\delta_1|, |\delta_2| \le 2\varepsilon \, , \; |\delta_3| \le \varepsilon \\[6pt]
+&= (x^2 - y^2)\left(1 + \delta_1 + \delta_2 + \delta_3 + O(\varepsilon^2)\right) \, , \qquad |\delta_1 + \delta_2 + \delta_3| \le 5\varepsilon
 \end{align*}
 $$
 
@@ -700,7 +700,7 @@ s \otimes (s \ominus a) &= 0.4525 \; \rightarrow \; 0.452 \\[2pt]
 \end{align*}
 $$
 
-Even though the computed value $\tilde{s} = 9.05$ is in error by only $\mathrm{aerr}(s, \tilde{s}) = 2$ ulps, the computed area $\tilde{A} = 3.04$ is in error by $\mathrm{aerr}(A, \tilde{A}) = \abs{3.04 - 2.34216} \times 10^2 = 69.8 \approx 70$ ulps, i.e. $\mathrm{rerr}(A, \tilde{A}) = 0.30 = 60\,\varepsilon$. (Rounding the halfway case $0.4525$ up to $0.453$ instead gives $2.05$, $9.27$, and again $3.04$.)
+Even though the computed value $\tilde{s} = 9.05$ is in error by only $\mathrm{aerr}(s, \tilde{s}) = 2$ ulps, the computed area $\tilde{A} = 3.04$ is in error by $\mathrm{aerr}(A, \tilde{A}) = \lvert 3.04 - 2.34216 \rvert \times 10^2 = 69.8 \approx 70$ ulps, i.e. $\mathrm{rerr}(A, \tilde{A}) = 0.30 = 60\,\varepsilon$. (Rounding the halfway case $0.4525$ up to $0.453$ instead gives $2.05$, $9.27$, and again $3.04$.)
 
 **Misprint in [1]**: the ACM version states "an error of 60 ulps"; the error is $70$ ulps.
 
@@ -746,7 +746,7 @@ a \oplus (b \ominus c) &= 9.0 + 0 = 9.0 \\[6pt]
 \end{align*}
 $$
 
-The computed area $\tilde{A} = 2.35$ is in error by $\mathrm{aerr}(A, \tilde{A}) = \abs{2.35 - 2.34216} \times 10^2 = 0.78$ ulps, about 1 ulp, much more accurate than Heron's formula: $\mathrm{rerr}(A, \tilde{A}) = (2.35 - 2.34216)/2.34216 = 3.35 \times 10^{-3} = 0.67\,\varepsilon \approx 0.7\,\varepsilon$.
+The computed area $\tilde{A} = 2.35$ is in error by $\mathrm{aerr}(A, \tilde{A}) = \lvert 2.35 - 2.34216 \rvert \times 10^2 = 0.78$ ulps, about 1 ulp, much more accurate than Heron's formula: $\mathrm{rerr}(A, \tilde{A}) = (2.35 - 2.34216)/2.34216 = 3.35 \times 10^{-3} = 0.67\,\varepsilon \approx 0.7\,\varepsilon$.
 The difference is in the small factor: in Heron's formula, $s - a$ cancels $s$, which already carries a rounding error, while in Kahan's formula the corresponding factor $c \ominus (a \ominus b)$ is computed exactly from exactly known data: both cancellations are benign.
 
 Although formula (4.5) is much more accurate than (4.4) for this example, it would be nice to know how well (4.5) performs in general:
@@ -971,7 +971,7 @@ $$
 \end{align*}
 $$
 
-By Eq.(2.1c) with $p = 4$, the naive result $3.000 \times 10^{-2}$ is in error by $\mathrm{aerr}(b^2 - ac,\, 0.03) = \abs{3.000 - 3.4799} \times 10^3 = 479.9 \approx 480$ ulps.
+By Eq.(2.1c) with $p = 4$, the naive result $3.000 \times 10^{-2}$ is in error by $\mathrm{aerr}(b^2 - ac,\, 0.03) = \lvert 3.000 - 3.4799 \rvert \times 10^3 = 479.9 \approx 480$ ulps.
 Now split $a$, $b$ and $c$ with Eq.(5.2): $k = \lceil 4/2 \rceil = 2$ and $m = 10^2 + 1 = 101$.
 
 | $x$         | $m \otimes x$          | $m \otimes x \ominus x$ | $x_h$                        | $x_l = x \ominus x_h$ |
@@ -1017,7 +1017,7 @@ $$
 
 As a final example of exact rounding, consider dividing $m$ by 10. The result is a floating-point number that will in general not be equal to $m/10$. When $\beta = 2$, however, multiplying $m \oslash 10$ by 10 will miraculously restore $m$, provided exact rounding is being used. Actually, a more general fact (due to Kahan) is true:
 
-> **Theorem 7**: When $\beta = 2$, if $m$ and $n$ are integers with $\abs{m} < 2^{p-1}$ and $n$ has the special form $n = 2^i + 2^j$, then $(m \oslash n) \otimes n = m$, provided floating-point operations are exactly rounded.
+> **Theorem 7**: When $\beta = 2$, if $m$ and $n$ are integers with $\lvert m \rvert < 2^{p-1}$ and $n$ has the special form $n = 2^i + 2^j$, then $(m \oslash n) \otimes n = m$, provided floating-point operations are exactly rounded.
 
 The proof is ingenious (see [1], pp. 14–15), and skipped here. For the example above, $10 = 2^3 + 2^1$.
 The theorem holds true for any base $\beta$, as long as $2^i + 2^j$ is replaced by $\beta^i + \beta^j$. As $\beta$ gets larger, however, there are fewer and fewer denominators of this form. Up to 100:
