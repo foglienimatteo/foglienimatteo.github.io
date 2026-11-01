@@ -23,17 +23,20 @@ References:
 
 - [1] D. Goldberg: _"What Every Computer Scientist Should Know About Floating-Point Arithmetic"_, ACM Computing Surveys, Vol. 23 Num. 1 pag. 5–48 (1991), DOI [10.1145/103162.103163](https://doi.org/10.1145/103162.103163)
 
-This is the first of two articles on [1]. It covers Section 1 of the paper, "Rounding error"; the IEEE standard (Section 2 of [1]) will be the subject of the next one.
-Section $k$ of this article corresponds to Section 1.$k$ of [1], and the theorems keep the numbering of the paper.
-All the numerical examples of [1] are recomputed step by step (see Section 6 for how); the proof of Theorem 7 is skipped.
 
 
 ## TL;DR
 
-A floating-point number with base $\beta$ and precision $p$ is
+A floating-point number $x$ with base $\beta$ and precision $p$ can be written normalized (i.e. with first significat digit non-zero) as:
 
 $$
-\boxed{\pm\, d_0.d_1 d_2 \cdots d_{p-1} \times \beta^e = \pm\left(d_0 + d_1\,\beta^{-1} + \dots + d_{p-1}\,\beta^{-(p-1)}\right)\beta^e \, , \quad 0 \le d_i < \beta} \tag{1.1}
+\boxed{ 
+\begin{align*}
+x &= \pm\, d_0.d_1 d_2 \cdots d_{p-1} \times \beta^e \\[5pt]
+&= \pm\left(d_0 + d_1\,\beta^{-1} + \dots + d_{p-1}\,\beta^{-(p-1)}\right)\beta^e \, , \quad 0 \le d_i < \beta
+\end{align*}
+} 
+\tag{1.1}
 $$
 
 Rounding a real number to the nearest floating-point number commits an error of at most half a unit in the last place (ulp), i.e. a relative error of at most the machine epsilon
