@@ -27,6 +27,8 @@ References:
 
 ## TL;DR
 
+Notation: $\oplus, \ominus, \otimes, \oslash$, etc are the computed operations; $\mathrm{LN}$, $\mathrm{SQRT}$, $\mathrm{EXP}$, etc are the computed fuctions.
+
 A floating-point number $x$ with base $\beta$ and precision $p$ can be written normalized (i.e. with first significat digit non-zero) as:
 
 $$
@@ -39,23 +41,32 @@ x &= \pm\, d_0.d_1 d_2 \cdots d_{p-1} \times \beta^e \\[5pt]
 \tag{1.1}
 $$
 
-Rounding a real number to the nearest floating-point number commits an error of at most half a unit in the last place (ulp), i.e. a relative error of at most the machine epsilon
+**Ulps**: Rounding a real number to the nearest floating-point number commits an error of at most half a **unit in the last place** (**ulp**), i.e. a relative error of at most the machine epsilon $\varepsilon$ equal to
 
 $$
 \boxed{\varepsilon := \frac{\beta}{2}\,\beta^{-p}} \tag{2.4}
 $$
 
-- **Guard digits**: computing $x - y$ with only $p$ digits can give a relative error as large as $\beta - 1$ (Theorem 1); a single extra digit brings it below $2\varepsilon$ (Theorem 2).
-- **Cancellation**: subtracting two nearby numbers that already carry rounding errors is _catastrophic_; subtracting exactly known numbers is _benign_. Many formulas can be rewritten so that only benign cancellations occur ($\oplus, \ominus, \otimes, \oslash$ are the computed operations, $\mathrm{LN}$ the computed logarithm):
+**Guard digits**: computing $x - y$ with only $p$ digits can give a relative error as large as $\beta - 1$ (Theorem 1); a single extra digit brings it below $2\varepsilon$ (Theorem 2):
 
-| quantity                             | naive form                                       | rewritten form                                                              |
-| ------------------------------------ | ------------------------------------------------ | --------------------------------------------------------------------------- |
-| root of $ax^2 + bx + c$, with $b > 0$ | $\frac{-b + \sqrt{b^2 - 4ac}}{2a}$               | $\frac{2c}{-b - \sqrt{b^2 - 4ac}}$, Eq.(4.2)                                 |
-| $x^2 - y^2$                          | $(x \otimes x) \ominus (y \otimes y)$            | $(x \ominus y) \otimes (x \oplus y)$                                        |
-| area of a triangle                   | Heron's formula, Eq.(4.4)                        | Kahan's formula, Eq.(4.5)                                                   |
-| $\ln(1 + x)$, with $x \ll 1$          | $\mathrm{LN}(1 \oplus x)$                        | $x \otimes \mathrm{LN}(1 \oplus x) \oslash \big((1 \oplus x) \ominus 1\big)$, Eq.(4.8) |
+$$
+\mathrm{rerr}[\beta, p](x-y) = \frac{x \ominus y}{x} \leq \beta-1
+$$
 
-- **Exact rounding** (compute exactly, then round to the nearest) with **round half to even** keeps $(x \ominus y) \oplus y$ from drifting (Theorem 5), allows to split a number into two half-precision parts (Theorem 6), and guarantees $(m \oslash n) \otimes n = m$ for $n = 2^i + 2^j$ (Theorem 7).
+$$
+\mathrm{rerr}_g[\beta, p](x-y) = \frac{x \ominus y}{x} \leq 2\varepsilon
+$$
+
+**Cancellation**: subtracting two nearby numbers that already carry rounding errors is _catastrophic_; subtracting exactly known numbers is _benign_. Many formulas can be rewritten so that only benign cancellations occur:
+
+| quantity                          | naive form                            | rewritten form                                                                         |
+| --------------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------- |
+| root of $ax^2 + bx + c$,  $b > 0$ | $\frac{-b + \sqrt{b^2 - 4ac}}{2a}$    | $\frac{2c}{-b - \sqrt{b^2 - 4ac}}$, Eq.(4.2)                                           |
+| $x^2 - y^2$                       | $(x \otimes x) \ominus (y \otimes y)$ | $(x \ominus y) \otimes (x \oplus y)$                                                   |
+| area of a triangle                | Heron's formula, Eq.(4.4)             | Kahan's formula, Eq.(4.5)                                                              |
+| $\ln(1 + x)$, with $x \ll 1$      | $\mathrm{LN}(1 \oplus x)$             | $x \otimes \mathrm{LN}(1 \oplus x) \oslash \big((1 \oplus x) \ominus 1\big)$, Eq.(4.8) |
+
+**Exact rounding** (compute exactly, then round to the nearest) with **round half to even** keeps $(x \ominus y) \oplus y$ from drifting (Theorem 5), allows to split a number into two half-precision parts (Theorem 6), and guarantees $(m \oslash n) \otimes n = m$ for $n = 2^i + 2^j$ (Theorem 7).
 
 
 ## 1. Floating-point formats
@@ -64,18 +75,24 @@ $$
 
 Squeezing infinitely many real numbers into a finite number of bits requires an approximate representation: the result of most computations with real numbers cannot be represented exactly, and must be rounded to fit back into the finite representation. The resulting rounding error is the characteristic feature of floating-point computation.
 
-A floating-point representation has a base $\beta$ (always assumed to be even) and a precision $p$. A number is written as $\pm\, d.dd \cdots d \times \beta^e$, where the $p$-digit number $d.dd \cdots d$ is the _significand_ (formerly called _mantissa_) and $e$ is the exponent. More precisely, $\pm\, d_0.d_1 d_2 \cdots d_{p-1} \times \beta^e$ represents the number
+A floating-point representation has a base $\beta$ (always assumed to be even) and a precision $p$. A number $x$ is written as $\pm\, d.dd \cdots d \times \beta^e$, where the $p$-digit number $d.dd \cdots d$ is the _significand_ (formerly called _mantissa_) and $e$ is the exponent. More precisely, $\pm\, d_0.d_1 d_2 \cdots d_{p-1} \times \beta^e$ represents the number
 
 $$
-\pm\left(d_0 + d_1\,\beta^{-1} + \dots + d_{p-1}\,\beta^{-(p-1)}\right)\beta^e \, , \quad 0 \le d_i < \beta \tag{1.1}
+\boxed{ 
+\begin{align*}
+x &= \pm\, d_0.d_1 d_2 \cdots d_{p-1} \times \beta^e \\[5pt]
+&= \pm\left(d_0 + d_1\,\beta^{-1} + \dots + d_{p-1}\,\beta^{-(p-1)}\right)\beta^e \, , \quad 0 \le d_i < \beta
+\end{align*}
+} 
+\tag{1.1}
 $$
 
 The term _floating-point number_ means a real number that can be represented exactly in the format under discussion. The exponent is bounded, $e_{\min} \le e \le e_{\max}$.
 
-**Example**: the number $0.1$.
+**Example**: the number $x = 0.1$.
 
-- With $\beta = 10$ and $p = 3$, it is represented exactly as $1.00 \times 10^{-1}$.
-- With $\beta = 2$ and $p = 24$, it cannot be represented exactly: $0.1$ has a finite decimal representation, but an infinite binary one. Doubling the fractional part over and over gives its binary digits one by one:
+- With $\beta = 10$ and $p = 3$, $0.1$ is represented exactly as $1.00 \times 10^{-1}$.
+- With $\beta = 2$ and $p = 24$, $0.1$ cannot be represented exactly: it has a finite decimal representation, but an infinite binary one. Doubling the fractional part over and over gives its binary digits one by one:
 
 $$
 \begin{align*}
@@ -93,36 +110,48 @@ $$
 0.1 = (0.0\,0011\,0011\,0011\,0011 \ldots)_2 = (1.1001\,1001\,1001 \ldots)_2 \times 2^{-4} \tag{1.2}
 $$
 
-Keeping $p = 24$ digits (one before the binary point and 23 after it), the first discarded digits are $1100 \ldots$, more than half a unit of the last kept digit, so we round up:
+Keeping $p = 24$ digits (one before the binary point and 23 after it, which is what a single-precision number in IEEE 754 standard does), the first discarded digits are $1100 \ldots$, more than half a unit of the last kept digit, so we round up:
 
 $$
 \begin{align*}
 0.1 &= 1.10011001100110011001100\,\big|\,1100 \ldots \times 2^{-4} \\[6pt]
 &\approx 1.10011001100110011001101 \times 2^{-4} \\[6pt]
-&= 13421773 \times 2^{-27} = 0.100000001490116119384765625
+&= 13421773 \times 2^{-27}  \\[6pt]
+&= 0.100000001490116119384765625
 \end{align*} \tag{1.3}
 $$
 
 where $13421773$ is the 24-digit significand read as an integer, and $2^{-27} = 2^{-23} \times 2^{-4}$ is the weight of its last digit.
-$0.1$ lies strictly between the two consecutive floating-point numbers $13421772 \times 2^{-27} = 0.0999999940\ldots$ and $13421773 \times 2^{-27} = 0.1000000015\ldots$, so it is exactly representable by neither of them: the closest one is in error by $1.49 \times 10^{-9}$, i.e. by $0.2$ units of the last digit.
+In this single-precision representation, $0.1$ lies strictly between the two consecutive floating-point numbers $a$ and $b$
+$$
+\begin{align*}
+&\quad\quad a < 0.1 < b \\[6pt]
+&a = 13421772 \times 2^{-27} = 0.0999999940\ldots \\[6pt]
+&b = 13421773 \times 2^{-27} = 0.1000000015\ldots
+\end{align*} \tag{1.3}
+$$
+so it is exactly representable by neither of them: the closest one is in error by $1.49 \times 10^{-9}$, i.e. by $0.2$ units of the last digit.
 
 
 ### 1.2 Encoding
 
-There are $\beta^p$ possible significands and $e_{\max} - e_{\min} + 1$ possible exponents, so a floating-point number can be encoded in
+Given a base $\beta$, a precision $p$ and man/min integer exponents $e_{\max}/e_{\min}$, there are $\beta^p$ possible significands and $e_{\max} - e_{\min} + 1$ possible exponents. So, a floating-point number $x$ can be encoded in a number of bits equal to
 
 $$
-\big\lceil \log_2(e_{\max} - e_{\min} + 1) \big\rceil + \big\lceil \log_2(\beta^p) \big\rceil + 1 \quad \mathrm{bits} \tag{1.4}
+N_{\mathrm{bits}}[\beta,\, p,\, e_{\max},\, e_{\min}] = 
+\big\lceil \log_2(e_{\max} - e_{\min} + 1) \big\rceil + \big\lceil \log_2(\beta^p) \big\rceil + 1
+\tag{1.4}
 $$
 
-where the final $+1$ is the sign bit. The precise encoding is not important for now. Two examples, not in [1]:
+and where the final $+1$ is the sign bit. The precise encoding is not important for now. Two examples:
 
-| format                                                     | exponent                     | significand                    | sign | total |
-| ---------------------------------------------------------- | ---------------------------- | ------------------------------ | ---- | ----- |
-| $\beta = 2$, $p = 3$, $e_{\min} = -1$, $e_{\max} = 2$      | $\lceil \log_2 4 \rceil = 2$ | $\lceil \log_2 2^3 \rceil = 3$ | 1    | 6     |
-| $\beta = 2$, $p = 24$, $e_{\min} = -126$, $e_{\max} = 127$ | $\lceil \log_2 254 \rceil = 8$ | $\lceil \log_2 2^{24} \rceil = 24$ | 1 | 33    |
+| $\beta$ | $p$  | $e_{\min}$ | $e_{\max}$ | exponent                       | significand                        | sign | total |
+| ------- | ---- | ---------- | ---------- | ------------------------------ | ---------------------------------- | ---- | ----- |
+| $2$     | $3$  | $-1$       | $2$        | $\lceil \log_2 4 \rceil = 2$   | $\lceil \log_2 2^3 \rceil = 3$     | 1    | 6     |
+| $2$     | $24$ | $-126$     | $127$      | $\lceil \log_2 254 \rceil = 8$ | $\lceil \log_2 2^{24} \rceil = 24$ | 1    | 33    |
+| $2$     | $53$ | $-1022$     | $1023$      | $\lceil \log_2 2045 \rceil = 11$ | $\lceil \log_2 2^{53} \rceil = 53$ | 1    | 65    |
 
-The second one has the exponent range and the precision of IEEE single precision, which nevertheless fits in 32 bits: the leading digit of a normalized binary significand (Section 1.4) is always 1, so it does not need to be stored. This will be discussed in the next article.
+The second and third one has the exponent range and the precision of IEEE single and double precision respectively, which nevertheless fits in 32 adn 64 bits: the leading digit of a normalized binary significand (Section 1.4) is always 1, so it does not need to be stored. This will be discussed in the next article.
 
 
 ### 1.3 Why a real number may not be representable
@@ -132,20 +161,26 @@ There are two reasons:
 1. the most common one: a real number with a finite representation in one base can have an infinite representation in another, like $0.1$ in Eq.(1.2). Then it lies strictly between two floating-point numbers;
 2. the number is out of range: its absolute value is larger than $\beta \times \beta^{e_{\max}}$ or smaller than $1.0 \times \beta^{e_{\min}}$.
 
-This article (as Section 1 of [1]) deals with the first reason only; out-of-range numbers are discussed in Section 2 of [1].
+This article deals with the first reason only; out-of-range numbers are discussed in the next article.
 
 
 ### 1.4 Normalized numbers
 
-Floating-point representations are not unique: both $0.01 \times 10^1$ and $1.00 \times 10^{-1}$ represent $0.1$. If the leading digit is nonzero, $d_0 \neq 0$ in Eq.(1.1), the representation is said to be _normalized_: $1.00 \times 10^{-1}$ is normalized, $0.01 \times 10^1$ is not. Requiring normalization makes the representation unique.
+Floating-point representations are not unique: both $0.01 \times 10^1$ and $1.00 \times 10^{-1}$ represent $0.1$.
+
+**Normalized representation**: if the leading digit of a floating-point representation of a number is nonzero, i.e. $d_0 \neq 0$ in Eq.(1.1), the representation is said to be _normalized_
+
+E.g.: $1.00 \times 10^{-1}$ is normalized, $0.01 \times 10^1$ is not. **Requiring normalization makes the representation unique**.
 
 In a normalized significand $d_0$ can take $\beta - 1$ values and each of $d_1, \ldots, d_{p-1}$ can take $\beta$ values, so the number of positive normalized floating-point numbers is
 
 $$
-(\beta - 1)\,\beta^{p-1}\,(e_{\max} - e_{\min} + 1) \tag{1.5}
+N_{\mathrm{norm}}[\beta,\, p,\, e_{\max},\, e_{\min}] = 
+(\beta - 1)\,\beta^{p-1}\,(e_{\max} - e_{\min} + 1) 
+\tag{1.5}
 $$
 
-For $\beta = 2$, $p = 3$, $e_{\min} = -1$, $e_{\max} = 2$ (Figure 1 of [1]) this gives $1 \times 2^2 \times 4 = 16$ numbers. The significand $1.d_1 d_2$ is $1 + d_1/2 + d_2/4$, and the spacing between consecutive numbers with exponent $e$ is one unit of the last digit, $2^{-2} \times 2^e$:
+For $\beta = 2$, $p = 3$, $e_{\min} = -1$, $e_{\max} = 2$, this gives $1 \times 2^2 \times 4 = 16$ numbers. The significand $1.d_1 d_2$ is $1 + d_1/2 + d_2/4$, and the spacing between consecutive numbers with exponent $e$ is one unit of the last digit, $2^{-2} \times 2^e$:
 
 | $e$  | $1.00 \times 2^e$ | $1.01 \times 2^e$ | $1.10 \times 2^e$ | $1.11 \times 2^e$ | spacing $2^{e-2}$ |
 | ---- | ----------------- | ----------------- | ----------------- | ----------------- | ----------------- |
@@ -154,7 +189,7 @@ For $\beta = 2$, $p = 3$, $e_{\min} = -1$, $e_{\max} = 2$ (Figure 1 of [1]) this
 | $1$  | $2$               | $2.5$             | $3$               | $3.5$             | $0.5$             |
 | $2$  | $4$               | $5$               | $6$               | $7$               | $1$               |
 
-![Normalized floating-point numbers for beta = 2, p = 3, e_min = -1, e_max = 2]({{ '/assets/images/floating-point/figure-1-normalized-numbers.svg' | relative_url }})
+![Normalized floating-point numbers for beta = 2, p = 3, e_min = -1, e_max = 2](/assets/images/floating-point/figure-1-normalized-numbers.svg)
 
 Each time the exponent grows by one, the spacing doubles: floating-point numbers are not uniformly distributed on the real line, it is their _relative_ spacing that stays (roughly) constant. The bold marks are the numbers with significand $1.00$.
 
@@ -171,80 +206,130 @@ where the last step renormalizes the significand.
 
 ## 2. Relative error and ulps
 
-**Assumption**: from now on, unless stated otherwise, $\beta = 10$ and $p = 3$, as in [1].
+**Assumption**: from now on in this section, unless stated otherwise, $\beta = 10$ and $p = 3$.
 
-### 2.1 Units in the last place
+### 2.1 Units in the last place and relative error
 
-If the result of a floating-point computation is $3.12 \times 10^{-2}$ and the answer computed with infinite precision is $0.0314$, the result is in error by 2 units in the last place. In general, if the floating-point number $d.d \cdots d \times \beta^e$ is used to represent the real number $z$, it is in error by
+**Ulps**: if the result of a floating-point computation is e.g. $3.12 \times 10^{-2}$ and the answer computed with infinite precision is $0.0314$, the result is in error by 2 **units in the last place (ulps)**. 
+
+Note that what an ulp is exactly depends on the base $\beta$, the precision $p$ and **the exponent $e$**:
 
 $$
-\abs{d.d \cdots d - \frac{z}{\beta^e}}\,\beta^{p-1} \quad \mathrm{ulps} \tag{2.1}
+\mathrm{ulp} = \mathrm{ulp}[\beta,\,p,\,e] = \beta^{-(p-1)}\,\beta^{e}
 $$
 
-units in the last place, as long as $\beta^{e_{\min}} \le z \le \beta^{e_{\max} + 1}$. Note that the exponent $e$ is the one of the floating-point number, not of $z$:
+In general, if the floating-point number $d_0.d_1 \cdots d_{p-1} \times \beta^e$ is used to represent the real number $x$, it is in  (absolute) error by
+
+$$
+\mathrm{aerr}[\beta,\,p](x) =\bigg|d_0.d_1 \cdots d_{p-1} - \frac{x}{\beta^e}\bigg|\,\beta^{p-1} \; \mathrm{ulps} \tag{2.1}
+$$
+
+as long as $\beta^{e_{\min}} \le x \le \beta^{e_{\max} + 1}$. Note that the exponent $e$ is the one of the floating-point number, not of $x$:
 
 $$
 \begin{align*}
-3.12 \times 10^{-2} \; \text{for} \; z = 0.0314 \, : &\quad \abs{3.12 - 3.14} \times 10^{2} = 2 \; \mathrm{ulps} \\[6pt]
-3.14 \times 10^{-2} \; \text{for} \; z = 0.0314159 \, : &\quad \abs{3.14 - 3.14159} \times 10^{2} = 0.159 \; \mathrm{ulps}
+&3.12 \times 10^{-2} \; , \; x = 0.0314 \, : 
+&\mathrm{aerr}[\beta,\,p](x) &= |3.12 - 3.14| \times 10^{2} \\
+&&&= 2 \; \mathrm{ulps} \\[6pt]
+&3.14 \times 10^{-2} \; , \; x = 0.0314159 \, : 
+&\mathrm{aerr}[\beta,\,p](x) &= |3.14 - 3.14159| \times 10^{2} \\
+&&&= 0.159 \; \mathrm{ulps}
 \end{align*}
 $$
 
 If the result of a calculation is the floating-point number nearest to the correct result, it can still be in error by as much as half an ulp.
 
-
-### 2.2 Relative error
-
 Another way to measure the difference between a floating-point number $\tilde{x}$ and the real number $x$ it approximates is the _relative error_:
 
 $$
-\frac{\abs{\tilde{x} - x}}{\abs{x}} \tag{2.2}
+\mathrm{rerr}(x, \tilde{x}) = \frac{|\tilde{x} - x|}{|x|} \tag{2.2}
 $$
 
-For example, approximating $3.14159$ by $3.14 \times 10^0$ commits the relative error $0.00159/3.14159 = 5.06 \times 10^{-4} \approx 0.0005$.
 
-
-### 2.3 Half an ulp and the machine epsilon
-
-When a real number is approximated by the closest floating-point number $d.dd \cdots dd \times \beta^e$, the absolute error can be as large as half an ulp, i.e. half a unit of the digit with weight $\beta^{-(p-1)}\beta^e$:
+For example: 
 
 $$
-\frac{1}{2}\,\mathrm{ulp} = \frac{1}{2}\,\beta^{-(p-1)}\,\beta^{e} = \frac{\beta}{2}\,\beta^{-p}\,\beta^{e} = 0.\underbrace{0 \cdots 0}_{p-1}\Big(\frac{\beta}{2}\Big) \times \beta^{e}
+\begin{align*}
+x = 3.14159\; &, \quad \tilde{x} = 3.14 \times 10^0 \\[6pt]
+\; \Rightarrow \;
+\mathrm{rerr}(x, \tilde{x}) &= \frac{0.00159}{3.14159} = 5.06 \times 10^{-4} \approx 0.0005
+\end{align*}
 $$
 
-that is, the number whose only nonzero digit is $\beta/2$, in the $p$-th position after the point; for $\beta = 10$, $p = 3$ this is $0.005 \times 10^e$.
-All the numbers of the form $d.dd \cdots dd \times \beta^e$ have this same maximal absolute error, but their values range between $\beta^e$ and $\beta \times \beta^e$. So the corresponding relative error ranges between
+
+### 2.2 Half an ulp and the machine epsilon
+
+When a real number $x$ is approximated by the closest floating-point number $d_0.d_1d_2 \cdots d_{p-1} \times \beta^e$, the absolute error can be as large as half an ulp, i.e. half a unit of the digit with weight $\beta^{-(p-1)}\beta^e$:
 
 $$
-\frac{(\beta/2)\,\beta^{-p}\,\beta^{e}}{\beta \times \beta^{e}} \quad \mathrm{and} \quad \frac{(\beta/2)\,\beta^{-p}\,\beta^{e}}{\beta^{e}}
+\begin{align*}
+\mathrm{aerr}[\beta,\,p](x) \leq \frac{1}{2}\,\mathrm{ulp} 
+&= \frac{1}{2}\,\beta^{-(p-1)}\,\beta^{e} \\[6pt]
+&= \frac{\beta}{2}\,\beta^{-p}\,\beta^{e} \\[6pt]
+&= 0.\underbrace{0 \cdots 0}_{p-1}\Big(\frac{\beta}{2}\Big) \times \beta^{e}
+\tag{2.3a}
+\end{align*}
+$$
+
+That is, the number whose only nonzero digit is $\beta/2$, in the $p$-th position after the point; for $\beta = 10$, $p = 3$ this is $0.005 \times 10^e$.
+All the numbers of the form $d_0.d_1d_2 \cdots d_{p-1} \times \beta^e$ have this same maximal absolute error, but their values range between $\beta^e$ and $\beta \times \beta^e$, and consequently varies the corresponding relative error:
+
+$$
+\mathrm{rerr}[\beta,\,p](x) =  \frac{|\tilde{x} - x|}{|x|} 
+= \frac{\mathrm{aerr}[\beta,\,p](x)}{|x|}
+\tag{2.3b}
+$$
+
+$$
+\mathrm{rerr}_{\min}[\beta,\,p](x) = 
+\frac{\mathrm{aerr}[\beta,\,p](x)}{\beta \times \beta^e}
+= \frac{(\beta/2)\,\beta^{-p}\,\beta^{e}}{\beta \times \beta^{e}}
+\tag{2.3c}
+$$
+
+$$
+\mathrm{rerr}_{\max}[\beta,\,p](x) = 
+\frac{\mathrm{aerr}[\beta,\,p](x)}{\beta^e}
+= \frac{(\beta/2)\,\beta^{-p}\,\beta^{e}}{\beta^{e}}
+\tag{2.3d}
 $$
 
 $$
 \Rightarrow \quad
-\frac{1}{2}\,\beta^{-p} \; \le \; \frac{1}{2}\,\mathrm{ulp} \; \le \; \frac{\beta}{2}\,\beta^{-p} \tag{2.3}
+\frac{1}{2}\,\beta^{-p} \; \le \; \frac{1}{2}\,\mathrm{ulp} \; \le \; \frac{\beta}{2}\,\beta^{-p} 
+\tag{2.3e}
 $$
 
 where, as in [1], the middle term denotes the relative error corresponding to half an ulp.
 For $\beta = 10$, $p = 3$, Eq.(2.3) reads $0.0005 \le \frac{1}{2}\,\mathrm{ulp} \le 0.005$: half an ulp of the numbers with exponent 0 is $0.005$, which is a relative error of $0.005/1.00 = 0.005$ for $1.00$, but of only $0.005/9.99 = 0.0005005$ for $9.99$.
 
-The relative error corresponding to half an ulp can thus vary by a factor of $\beta$, which is called the _wobble_. Setting the _machine epsilon_ to the largest of the bounds in Eq.(2.3),
+**Machine epsilon* *: the relative error corresponding to half an ulp can thus vary by a factor of $\beta$, which is called the _wobble_. Setting the _machine epsilon_ to the largest of the bounds in Eq.(2.3),
 
 $$
-\boxed{\varepsilon := \frac{\beta}{2}\,\beta^{-p}} \tag{2.4}
+\boxed{\varepsilon = \varepsilon[\beta,\,p] := \frac{\beta}{2}\,\beta^{-p}} \tag{2.4}
 $$
 
-we can say that when a real number is rounded to the closest floating-point number, the relative error is always bounded by $\varepsilon$. Some values:
+We can say that when a real number is rounded to the closest floating-point number, the relative error is always bounded by $\varepsilon$. Some values:
 
-| format                | $\varepsilon$                            |
-| --------------------- | ---------------------------------------- |
-| $\beta = 10$, $p = 3$ | $5 \times 10^{-3} = 0.005$               |
-| $\beta = 2$, $p = 24$ | $2^{-24} \approx 5.96 \times 10^{-8}$    |
-| $\beta = 2$, $p = 53$ | $2^{-53} \approx 1.11 \times 10^{-16}$   |
+| $\beta$ | $p$  | $\varepsilon$                          |
+| ------- | ---- | -------------------------------------- |
+| $10$    | $3$  | $5 \times 10^{-3} = 0.005$             |
+| $2$     | $24$ | $2^{-24} \approx 5.96 \times 10^{-8}$  |
+| $2$     | $53$ | $2^{-53} \approx 1.11 \times 10^{-16}$ |
 
-To avoid such small numbers, relative errors are normally written as a factor times $\varepsilon$. For the approximation of $3.14159$ of Section 2.2:
+To avoid such small numbers, relative errors are normally written as a factor times $\varepsilon$. For the approximation of $3.14159$ of Section 2.1:
 
 $$
-\frac{0.00159/3.14159}{0.005}\,\varepsilon = \frac{5.06 \times 10^{-4}}{5 \times 10^{-3}}\,\varepsilon \approx 0.1\,\varepsilon
+\begin{align*}
+\beta = 10\; &, \quad p = 4 \\[6pt]
+x = 3.14159\; &, \quad \tilde{x} = 3.14 \times 10^0 \\[6pt]
+\; \Rightarrow \;
+\mathrm{rerr}(x, \tilde{x}) &= \frac{0.00159}{3.14159} = 5.06 \times 10^{-4} \approx 0.0005 \\[8pt]
+\varepsilon &= \frac{10}{2}\,10^{-4} = 0.005 \\[8pt]
+\; \Rightarrow \;
+\mathrm{rerr}(x, \tilde{x}) &=
+\frac{5.06 \times 10^{-4}}{0.005}\,\varepsilon \approx  0.1\,\varepsilon
+\end{align*}
 $$
 
 
