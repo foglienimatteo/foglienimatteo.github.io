@@ -72,7 +72,8 @@ g_i(x) &=
     \tfrac{g''(x_i)}{6}\left[-\tfrac{(x - x_{i+1})^3}{\Delta_i} + 
     \Delta_i(x - x_{i+1})\right] + \tfrac{g''(x_{i+1})}{6}\left[ 
         \tfrac{(x - x_{i})^3}{\Delta_i} - \Delta_i(x - x_{i})
-    \right] + y_{i+1} \tfrac{x - x_{i}}{\Delta_i} - y_{i} \tfrac{x - x_{i+1}}{\Delta_i} \; , 
+    \right] \\[7pt]
+    &\qquad+ y_{i+1} \tfrac{x - x_{i}}{\Delta_i} - y_{i} \tfrac{x - x_{i+1}}{\Delta_i} \; , 
 
 \end{split}
 $$
@@ -80,8 +81,7 @@ $$
 where $\Delta_i = x_{i+1} - x_i$.
 
 
-The $g''(x_i)$ are the $N$ unknowns, and applying the continuity of the first derivative condition 
-$g_i'(x_i) = g_{i-1}'(x_i) \, , \;\forall i=2,...,N-1$, we get
+The $g''(x_i)$ are the $N$ unknowns, and applying the continuity of the first derivative condition  $g_i'(x_i) = g_{i-1}'(x_i) \, , \;\forall i=2,...,N-1$, we get
 
 $$
 \begin{split}
@@ -95,6 +95,7 @@ $$
 
 We have then $N-2$ equations for $N$ unknowns. The remaining ones are the "end conditions" that one may want to apply.
 The most common ones are:
+
 - Free run-out or Natural spline: $g''(x_1)=g''(x_N)=0$
   - most commonly used;
   - this spline is the smoothest interpolant (i.e. $\int_{x_1}^{x_N}g''(x)\, \mathrm{d}x$ is the smallest possible)
@@ -169,6 +170,7 @@ a_i=\begin{cases}
     \end{cases}
 $$
 $$
+\qquad\qquad
 b_i=\begin{cases}
         b_1  &\quad i=1 \\[5pt]
         \tfrac{\Delta_{i-1} + \Delta_{i}}{3} &\quad \forall i=2,...,N-1 \\[5pt]
@@ -182,6 +184,7 @@ c_i=\begin{cases}
     \end{cases}
 $$
 $$
+\qquad\qquad
 d_i=\begin{cases}
         d_1  &\quad i=1 \\[5pt]
         \tfrac{y_{i+1} + y_i}{\Delta_i} - \tfrac{y_{i} + y_{i-1}}{\Delta_{i-1}} &\quad \forall i=2,...,N-1 \\[5pt]
@@ -191,19 +194,22 @@ $$
 
 and the corresponding IC values:
 
-- Free run-out: 
+- Free run-out:
+
 $$
-b_1=b_N=1,\\ c_1=a_N=d_1=d_N=0
+b_1=b_N=1 \;,\; c_1=a_N=d_1=d_N=0
 $$
 
-- Parabolic run-out: 
+- Parabolic run-out:
+
 $$
-b_1=b_N=1,\\ c_1=a_N=-1, \\ d_1=d_N=0
+b_1=b_N=1 \;,\; c_1=a_N=-1 \;,\;d_1=d_N=0
 $$
 
 - Combination of first two run-out: 
+
 $$
-b_1=b_N=1,\\ c_1=-\beta\; , \quad a_N=-\alpha, \\ d_1=d_N=0
+b_1=b_N=1 \;,\; c_1=-\beta \;,\quad a_N=-\alpha \;,\; d_1=d_N=0
 $$
 
 - Third Derivative continuity: 
