@@ -69,11 +69,10 @@ $$
 \begin{split}
 &\forall x \in [x_i, x_{i+1}] \;, \, \forall i=1,...,N-1:  \\[10pt]
 g_i(x) &= 
-    \frac{g''(x_i)}{6}\left[-\frac{(x - x_{i+1})^3}{\Delta_i} + 
-    \Delta_i(x - x_{i+1})\right] + \frac{g''(x_{i+1})}{6}\left[ 
-        \frac{(x - x_{i})^3}{\Delta_i} - \Delta_i(x - x_{i})
-    \right] \\[8pt]
-    &\quad+ y_{i+1} \frac{x - x_{i}}{\Delta_i} - y_{i} \frac{x - x_{i+1}}{\Delta_i} \; , 
+    \tfrac{g''(x_i)}{6}\left[-\tfrac{(x - x_{i+1})^3}{\Delta_i} + 
+    \Delta_i(x - x_{i+1})\right] + \tfrac{g''(x_{i+1})}{6}\left[ 
+        \tfrac{(x - x_{i})^3}{\Delta_i} - \Delta_i(x - x_{i})
+    \right] + y_{i+1} \tfrac{x - x_{i}}{\Delta_i} - y_{i} \tfrac{x - x_{i+1}}{\Delta_i} \; , 
 
 \end{split}
 $$
@@ -82,15 +81,15 @@ where $\Delta_i = x_{i+1} - x_i$.
 
 
 The $g''(x_i)$ are the $N$ unknowns, and applying the continuity of the first derivative condition 
-$g'_i(x_i) = g'_{i-1}(x_i) \, , \;\forall i=2,...,N-1$, we get
+$g_i'(x_i) = g_{i-1}'(x_i) \, , \;\forall i=2,...,N-1$, we get
 
 $$
 \begin{split}
 &\qquad \forall i = 2,...N-1: \\[8pt]
-&\frac{\Delta_{i-1}}{6}g''(x_{i-1}) + 
-\frac{\Delta_{i-1} + \Delta_{i}}{3}g''(x_{i}) +
-\frac{\Delta_{i}}{6}g''(x_{i+1}) =
-\frac{y_{i+1} + y_i}{\Delta_i} - \frac{y_{i} + y_{i-1}}{\Delta_{i-1}}  \; .
+&\tfrac{\Delta_{i-1}}{6}g''(x_{i-1}) + 
+\tfrac{\Delta_{i-1} + \Delta_{i}}{3}g''(x_{i}) +
+\tfrac{\Delta_{i}}{6}g''(x_{i+1}) =
+\tfrac{y_{i+1} + y_i}{\Delta_i} - \tfrac{y_{i} + y_{i-1}}{\Delta_{i-1}}  \; .
 \end{split}
 $$
 
@@ -191,30 +190,34 @@ d_i=\begin{cases}
 $$
 
 and the corresponding IC values:
+
 - Free run-out: 
-  $$
-  b_1=b_N=1,\\ c_1=a_N=d_1=d_N=0
-  $$
+$$
+b_1=b_N=1,\\ c_1=a_N=d_1=d_N=0
+$$
+
 - Parabolic run-out: 
-  $$
-    b_1=b_N=1,\\ c_1=a_N=-1, \\ d_1=d_N=0
-  $$
+$$
+b_1=b_N=1,\\ c_1=a_N=-1, \\ d_1=d_N=0
+$$
+
 - Combination of first two run-out: 
-  $$
-    b_1=b_N=1,\\ c_1=-\beta\; , \quad a_N=-\alpha, \\ d_1=d_N=0
-  $$
+$$
+b_1=b_N=1,\\ c_1=-\beta\; , \quad a_N=-\alpha, \\ d_1=d_N=0
+$$
+
 - Third Derivative continuity: 
-  $$
-    c_1=\dfrac{\Delta_1}{6} \; , \quad 
-    a_N=\dfrac{\Delta_{N-1}}{6} \; , \quad
-    b_1=-\dfrac{\Delta_1}{6} \; , \quad 
-    b_N=-\dfrac{\Delta_{N-1}}{6} \, ,\\[10pt]
-    d_1=\Delta_1^2\; \eta_1^{(3)} \; , \quad 
-    d_N=-\Delta_{N-1}^2\; \eta_{N-3}^{(3)}  \; ,\\[10pt]
-    \eta_i^{(3)} = \dfrac{\eta_{i+1}^{(2)}-\eta_{i}^{(2)}}{x_{i+3} - x_i} \; , \quad 
-    \eta_i^{(2)} = \dfrac{\eta_{i+1}-\eta_{i}}{x_{i+2} - x_i} \; , \quad
-    \eta_i = \dfrac{y_{i+1} - y_i}{x_{i+} - x_i}
-  $$
+
+$$
+\begin{split}
+&c_1=\dfrac{\Delta_1}{6} \; , \quad  a_N=\dfrac{\Delta_{N-1}}{6} \; , \quad
+b_1=-\dfrac{\Delta_1}{6} \; , \quad  b_N=-\dfrac{\Delta_{N-1}}{6} \, ,\\[10pt]
+&\qquad\qquad d_1=\Delta_1^2\; \eta_1^{(3)} \; , \quad  d_N=-\Delta_{N-1}^2\; \eta_{N-3}^{(3)}  \; ,\\[10pt]
+&\eta_i^{(3)} = \dfrac{\eta_{i+1}^{(2)}-\eta_{i}^{(2)}}{x_{i+3} - x_i} \; , \quad 
+\eta_i^{(2)} = \dfrac{\eta_{i+1}-\eta_{i}}{x_{i+2} - x_i} \; , \quad
+\eta_i = \dfrac{y_{i+1} - y_i}{x_{i+} - x_i}
+\end{split}
+$$
 
 
 Then, we can compute the new coefficients $\alpha$, $\beta$, $\gamma$ and $\delta$, that give us a new simplified matrix:
@@ -267,6 +270,7 @@ $$
 $$
 
 Even better, we can divide everything for $\beta_i$, and obtain:
+
 $$
 \begin{bmatrix}
     1 & \tilde{\gamma}_1 & 0  & \cdots & 0 \\[5pt]
@@ -312,9 +316,12 @@ $$
 $$
 
 The unknowns $g''(x_i)$ are given from:
+
 $$
-g''(x_N) = \frac{\delta_N}{\beta_N} = \tilde{\delta}_N\\[10pt]
-g''(x_i) = \frac{\delta_i - \gamma_i\, g''(x_{i+1})}{\beta_i} = \tilde{\delta}_i - \tilde{\gamma}_i\, g''(x_{i+1})
+\begin{align*}
+&\qquad g''(x_N) = \frac{\delta_N}{\beta_N} = \tilde{\delta}_N\\[11pt]
+&g''(x_i) = \frac{\delta_i - \gamma_i\, g''(x_{i+1})}{\beta_i} = \tilde{\delta}_i - \tilde{\gamma}_i\, g''(x_{i+1})
+\end{align*}
 $$
 
 ## Final spline polynomial coefficients 
@@ -323,25 +330,30 @@ $$
 The final expression for $g(x)$ is:
 
 $$
-g(x) = \sum_{i=1}^N g_i(x) \;,\quad \forall x \in [x_1, x_N]\\[10pt]
-\forall x \in [x_i, x_{i+1}] \; , \quad \forall i=1,...,N-1: \\[8pt]
-g_i(x) = y_i + B_i (x-x_i) + C_i (x-x_i)^2 + D_i (x-x_i)^3 \;, \\[8pt]
+\begin{align*}
+&\qquad \qquad g(x) = \sum_{i=1}^N g_i(x) \;,\quad \forall x \in [x_1, x_N]\\[12pt]
+&\quad \forall x \in [x_i, x_{i+1}] \; , \quad \forall i=1,...,N-1: \\[8pt]
+& g_i(x) = y_i + B_i (x-x_i) + C_i (x-x_i)^2 + D_i (x-x_i)^3 \;, \\[8pt]
+\end{align*}
 
 $$
 
 where:
+
 $$
 C_i = \frac{g''(x_i)}{2} = \begin{cases}
     \dfrac{\delta_N}{2\beta_N} = \dfrac{\tilde{\delta}_N}{2} &\quad i=N \\[10pt]
     \dfrac{\delta_i - \gamma_i\, g''(x_{i+1})}{2\beta_i} = \dfrac{\delta_i - \gamma_i\, C_{i+1}}{2\beta_i} =\dfrac{\tilde{\delta}_i - \tilde{\gamma}_i\, C_{i+1}}{2} &\quad \forall i = 1,...,N-1
 \end{cases}
 $$
+
 $$
 \begin{split}
 B_i &= \frac{y_{i+1}-y_i}{\Delta_i} - \frac{\Delta_i}{6}\left[2 g''(x_i) + g''(x_{i+1}) \right] \\[10pt]
 &= \frac{y_{i+1}-y_i}{\Delta_i} - \frac{\Delta_i}{3}\left[2 C_i + C_{i+1} \right] \; , \qquad \forall i = 1,...,N-1
 \end{split}
 $$
+
 $$
 \begin{split}
 D_i &= \frac{g''(x_{i+1})-g''(x_i)}{6\Delta_i} \\[10pt]
