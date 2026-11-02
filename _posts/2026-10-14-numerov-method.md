@@ -36,6 +36,7 @@ $$
 - to have a set of $N+1$ values $x_0, ..., x_N$ EQUALLY SPACED by $h=x_{n+1}-x_{n}\, ,\; \forall\, n=0,...,N-1$
 - to know all the $U_n$ and $V_n$
 - defining $y_n := y(x_n)$, to know $y_0$ and $y_0'$
+- $F_n  := U_n + V_n\,y_n$
 
 
 $$

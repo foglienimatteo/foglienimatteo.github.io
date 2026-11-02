@@ -19,6 +19,15 @@ toc_icon: "cog"
 
 # Basics of numerical analysis
 
+References:
+
+[1] Wikipedia page ["Finite Difference"](https://en.wikipedia.org/wiki/Finite_difference)
+[2] Wikipedia page ["Finite difference coefficient"](ttps://en.wikipedia.org/wiki/Finite_difference_coefficient)
+
+
+
+## TL;DR
+
 We summarise the important equations derived in this article, for a function  ${\displaystyle f:\mathbb{R} \to \mathbb{R} }$ that is ${N \geq 3}$ times differentiable:
 
 
@@ -412,4 +421,7 @@ $$
 \binom{n}{j} :&= \frac{n!}{j!(n-j)!} \notag
 \end{align}
 $$
+
+
+And this is just the top of the iceberg: [Ref.[2]](https://en.wikipedia.org/wiki/Finite_difference_coefficient#Central_finite_difference) shows the whole set of coefficients to approximate the $n$-th derivative with an error of order $O(h^m)$, for both forward, backward and central differences:
 
