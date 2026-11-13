@@ -1,0 +1,40 @@
+---
+pagetitle: "Matteo Foglieni"
+toc: false
+listing:
+  id: recent-posts
+  contents: "blog/*/index.qmd"
+  sort: "date desc"
+  max-items: 5
+  date-format: iso
+  template: assets/post-list.ejs
+---
+
+::: {.home-intro}
+![](assets/images/matteo-foglieni-profile-picture.jpeg){.home-photo fig-alt="Matteo Foglieni" width=104 height=104}
+
+::: {.home-text}
+# Matteo Foglieni {.unnumbered .unlisted}
+
+Physics-based educated guy converted to computer science.
+Currently working at the Leibniz Supercomputing Centre in Munich (DE),
+mainly with K8s and containers on Openstack cloud. Julia enthusiast.
+
+Hi! This is my new shiny website (still wip).
+I will mostly post here technical topics for my own reference, but I'd be happy if anyone will find them useful.
+
+::: {.home-meta}
+[Garching bei München, DE]{.home-location}
+[GitHub](https://github.com/foglienimatteo)
+[LinkedIn](https://linkedin.com/in/foglienimatteo)
+[Mail](mailto:matteo.foglieni@lrz.de)
+:::
+:::
+:::
+
+## Recent posts {.home-section-title .unlisted}
+
+::: {#recent-posts}
+:::
+
+[All posts →](blog/index.qmd){.post-list-more}

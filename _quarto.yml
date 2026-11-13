@@ -1,0 +1,90 @@
+project:
+  type: website
+  output-dir: _site
+  # Only .qmd files are pages; README.md and the like are left alone.
+  render:
+    - "**/*.qmd"
+  # Files copied to the site as they are. Images and links written in Markdown
+  # are found automatically; these are the ones Quarto cannot see.
+  resources:
+    - CNAME
+    - assets/fonts/*.woff2
+    - assets/cv/**
+    - assets/posters/*.pdf
+    - assets/posters/*.jpg
+
+website:
+  title: "Matteo Foglieni"
+  description: >-
+    Personal website of Matteo Foglieni, posting every now and then
+    about physics and computer science (especially Julia)
+  site-url: https://foglienimatteo.com
+  # Pages with `draft: true` are rendered but appear in no listing, feed,
+  # sitemap or navigation (this is how /styleguide/ stays unlisted).
+  draft-mode: unlinked
+  search:
+    location: navbar
+    type: overlay
+  navbar:
+    pinned: false
+    right:
+      - text: Blog
+        href: blog/index.qmd
+      - text: Publications
+        href: Publications/index.qmd
+      - text: CV
+        href: CV/index.qmd
+      - text: Recommendations
+        href: Recommendations/index.qmd
+  page-footer:
+    left: "© Matteo Foglieni"
+    right:
+      - text: GitHub
+        href: https://github.com/foglienimatteo
+      - text: LinkedIn
+        href: https://linkedin.com/in/foglienimatteo
+      - text: Mail
+        href: mailto:matteo.foglieni@lrz.de
+      - text: RSS
+        href: blog/index.xml
+
+format:
+  html:
+    lang: en
+    theme:
+      light: [assets/theme/site.scss]
+      dark: [assets/theme/site.scss, assets/theme/dark.scss]
+    respect-user-color-scheme: true
+    highlight-style: github
+    grid:
+      body-width: 720px
+      margin-width: 240px
+      sidebar-width: 240px
+      gutter-width: 2.5rem
+    toc: true
+    toc-depth: 3
+    toc-title: Contents
+    anchor-sections: true
+    code-copy: true
+    code-overflow: scroll
+    fig-cap-location: bottom
+    callout-appearance: simple
+    html-math-method:
+      method: mathjax
+      url: https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js
+    include-in-header:
+      - assets/head.html
+
+# Shortcodes: {{< pdf-embed ... >}}, see assets/pdf-embed.lua
+shortcodes:
+  - assets/pdf-embed.lua
+
+# Code cells run on your machine, never on the server. Their output is stored
+# in _freeze/ (commit it) and reused until the source of that post changes, so
+# building the site needs neither Python nor Julia.
+execute:
+  freeze: auto
+
+# Stops Pandoc from adding a render-blocking polyfill script from a second CDN
+# in front of MathJax; MathJax itself is still loaded (see assets/head.html).
+mathjax: false

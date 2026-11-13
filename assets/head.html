@@ -1,0 +1,60 @@
+<link rel="preload" href="/assets/fonts/source-serif-4-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+
+<!--
+  MathJax 3 configuration. It has to be defined before the MathJax script
+  loads, which is why it lives in the page head.
+
+  tags: 'ams' numbers the equation/align/gather environments automatically and
+  enables \label/\eqref; \tag{...} sets a number by hand and \notag drops one.
+  A bare $$...$$ is NOT an AMS environment, so it is never numbered - wrap it
+  in \begin{equation}...\end{equation} when you want a number.
+
+  displayAlign: 'left' puts display math against the left margin instead of
+  centring it, which keeps multi-line derivations aligned with the prose. The
+  indent is padding on the container (assets/theme/site.scss), not MathJax's
+  displayIndent, which has no effect on a numbered equation.
+
+  Add your own macros to `macros` to use them in every post.
+-->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']],
+      processEscapes: true,
+      tags: 'ams',
+      macros: {
+        RR: "{\\mathbb{R}}",
+        curl: "\\nabla\\times",
+        dd: "\\mathrm{d}",
+        abs: ["\\left|#1\\right|", 1],
+        norm: ["\\left\\lVert#1\\right\\rVert", 1]
+      }
+    },
+    chtml: {
+      displayAlign: 'left'
+    },
+    options: {
+      // Only typeset what Pandoc marked as math; never scan code blocks.
+      processHtmlClass: 'math',
+      ignoreHtmlClass: 'sourceCode|cell-output'
+    },
+    startup: {
+      // MathJax 3 cannot break an inline formula across lines, so one that is
+      // longer than the text column (on a phone, mostly) would push the whole
+      // page sideways. Once typeset, mark those so they scroll on their own
+      // instead (.math-scroll in assets/theme/site.scss).
+      pageReady: function () {
+        return MathJax.startup.defaultPageReady().then(function () {
+          document.querySelectorAll('span.math.inline > mjx-container').forEach(function (m) {
+            if (m.closest('table')) return;
+            var block = m.closest('p, li, dd, blockquote, figcaption, div');
+            if (block && m.getBoundingClientRect().width > block.clientWidth) {
+              m.classList.add('math-scroll');
+            }
+          });
+        });
+      }
+    }
+  };
+</script>

@@ -1,0 +1,836 @@
+/*
+  Site theme. One file for the whole look: fonts, colours, spacing.
+
+  Colours are the variables in the first block; assets/theme/dark.scss
+  overrides the same names for the dark mode and nothing else.
+*/
+
+/*-- scss:defaults --*/
+
+// Colours ------------------------------------------------------------------
+$site-bg:        #fcfcfb !default;  // page background
+$site-text:      #1c1b19 !default;  // running text
+$site-secondary: #52514e !default;  // navigation, captions
+$site-muted:     #7a7872 !default;  // dates, meta
+$site-rule:      #e4e2dc !default;  // hairlines and borders
+$site-code-bg:   #f3f2ee !default;  // code blocks, inline code
+$site-accent:    #1c5cab !default;  // links
+
+// Interest-rate ramp used by the charts in the bank-loan post: one hue,
+// lightest = lowest value. Exposed as CSS variables further down.
+$chart-ramp: #86b6ef, #5598e7, #2a78d6, #1c5cab, #104281, #092a55 !default;
+$chart-highlight: #eb6834 !default;
+
+// Fonts --------------------------------------------------------------------
+$font-serif: "Source Serif 4 Variable", "Source Serif 4", Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+$font-ui: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "DejaVu Sans Mono", "Liberation Mono", monospace;
+
+// Bootstrap / Quarto variables ---------------------------------------------
+$font-family-sans-serif: $font-serif;
+$font-family-monospace: $font-mono;
+$font-size-root: 18px;
+$line-height-base: 1.65;
+
+$body-bg: $site-bg;
+$body-color: $site-text;
+$link-color: $site-accent;
+$link-decoration: underline;
+$border-color: $site-rule;
+
+$headings-font-weight: 600;
+$headings-line-height: 1.25;
+$h1-font-size: 2.2rem;
+$h2-font-size: 1.5rem;
+$h3-font-size: 1.22rem;
+$h4-font-size: 1.05rem;
+
+$navbar-bg: $site-bg;
+$navbar-fg: $site-secondary;
+$navbar-hl: $site-text;
+
+$footer-bg: $site-bg;
+$footer-fg: $site-muted;
+
+$code-bg: $site-code-bg;
+$code-color: $site-text;
+$code-block-bg: $site-code-bg;
+$code-font-size: 0.86em;
+
+$toc-color: $site-accent;
+$toc-font-size: 0.8rem;
+
+$table-border-color: $site-rule;
+$blockquote-color: $site-secondary;
+$blockquote-border-color: $site-rule;
+
+$callout-color-note: $site-muted;
+$callout-border-width: 2px;
+
+/*-- scss:rules --*/
+
+@font-face {
+  font-family: "Source Serif 4 Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 900;
+  src: url("/assets/fonts/source-serif-4-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Source Serif 4 Variable";
+  font-style: italic;
+  font-display: swap;
+  font-weight: 200 900;
+  src: url("/assets/fonts/source-serif-4-latin-wght-italic.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  --site-bg: #{$site-bg};
+  --plot-background: #{$site-bg};
+  --site-text: #{$site-text};
+  --site-secondary: #{$site-secondary};
+  --site-muted: #{$site-muted};
+  --site-rule: #{$site-rule};
+  --site-code-bg: #{$site-code-bg};
+  --site-accent: #{$site-accent};
+  @for $i from 1 through length($chart-ramp) {
+    --chart-#{$i}: #{nth($chart-ramp, $i)};
+  }
+  --chart-highlight: #{$chart-highlight};
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-variant-numeric: oldstyle-nums;
+}
+
+@media (max-width: 575.98px) {
+  html {
+    font-size: 17px;
+  }
+
+  /* Quarto's side gutters are 1.5em + padding; on a phone that costs too
+     much of the line. */
+  #quarto-content.page-columns {
+    grid-template-columns:
+      [screen-start] 1.25rem
+      [screen-start-inset page-start page-start-inset body-start-outset body-start body-content-start] minmax(0, 1fr)
+      [body-content-end body-end body-end-outset page-end-inset page-end screen-end-inset] 1.25rem
+      [screen-end];
+  }
+}
+
+/* Navigation ------------------------------------------------------------- */
+
+.navbar {
+  font-family: $font-ui;
+  font-size: 0.86rem;
+  border-bottom: 1px solid $site-rule;
+  padding-block: 0.55rem;
+
+  .navbar-container {
+    max-width: 1240px;
+    margin-inline: auto;
+  }
+
+  .navbar-brand {
+    font-family: $font-serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    color: $site-text;
+  }
+
+  .nav-link {
+    color: $site-secondary;
+    padding-inline: 0.8rem !important;
+
+    &:hover,
+    &.active {
+      color: $site-text;
+    }
+  }
+
+  .nav-link.active {
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.35em;
+  }
+
+  .navbar-toggler {
+    border: 0;
+    box-shadow: none;
+  }
+
+  .quarto-color-scheme-toggle {
+    color: $site-secondary;
+  }
+}
+
+/* Page frame ------------------------------------------------------------- */
+
+#quarto-content {
+  padding-top: 1.5rem;
+  padding-bottom: 4rem;
+}
+
+.nav-footer {
+  font-family: $font-ui;
+  font-size: 0.78rem;
+  border-top: 1px solid $site-rule;
+  padding-block: 1.25rem;
+  min-height: 0;
+
+  a {
+    color: $site-muted;
+    text-decoration: none;
+
+    &:hover {
+      color: $site-text;
+      text-decoration: underline;
+    }
+  }
+
+  .nav-footer-left,
+  .nav-footer-right {
+    padding-inline: 1rem;
+  }
+
+  .nav-footer-center {
+    display: none;
+  }
+
+  .nav-link {
+    padding: 0 0.6rem;
+  }
+}
+
+/* Title block ------------------------------------------------------------ */
+
+.quarto-title-block {
+  margin-bottom: 2.5rem;
+
+  .title {
+    font-size: $h1-font-size;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.18;
+    margin-bottom: 0.9rem;
+    text-wrap: balance;
+
+    @media (max-width: 575.98px) {
+      font-size: 1.75rem;
+    }
+  }
+
+  .description,
+  .subtitle {
+    color: $site-secondary;
+    font-size: 1.1rem;
+  }
+}
+
+.quarto-title-meta {
+  font-family: $font-ui;
+  font-size: 0.78rem;
+  color: $site-muted;
+  margin-top: 0.4rem !important;
+  column-gap: 2.5rem !important;
+
+  .quarto-title-meta-heading {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $site-muted;
+    margin-top: 0;
+    margin-bottom: 0.15rem;
+  }
+
+  .quarto-title-meta-contents {
+    color: $site-secondary;
+    font-variant-numeric: tabular-nums lining-nums;
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.quarto-title .quarto-categories {
+  font-family: $font-ui;
+  padding-bottom: 0.2rem;
+  gap: 0.4rem;
+  column-gap: 0.4rem;
+
+  .quarto-category {
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border: 1px solid $site-rule;
+    border-radius: 3px;
+    color: $site-secondary;
+    opacity: 1;
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+}
+
+/* Prose ------------------------------------------------------------------ */
+
+main.content {
+  h2,
+  h3,
+  h4 {
+    letter-spacing: -0.006em;
+    margin-top: 2.4em;
+    margin-bottom: 0.6em;
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  h3,
+  h4 {
+    margin-top: 2em;
+  }
+
+  p {
+    margin-bottom: 1.15em;
+    hanging-punctuation: first;
+  }
+
+  li {
+    margin-bottom: 0.3em;
+  }
+
+  a {
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+    text-decoration-color: rgba($site-accent, 0.45);
+
+    &:hover {
+      text-decoration-color: currentColor;
+    }
+  }
+
+  a.anchorjs-link {
+    text-decoration: none;
+    color: $site-muted;
+  }
+
+  hr {
+    border-color: $site-rule;
+    opacity: 1;
+    margin-block: 2.5rem;
+  }
+
+  blockquote {
+    border-left: 2px solid $site-rule;
+    padding-left: 1.1rem;
+    color: $site-secondary;
+    font-size: 1em;
+  }
+}
+
+/* Code ------------------------------------------------------------------- */
+
+code {
+  font-variant-ligatures: none;
+  font-variant-numeric: lining-nums;
+}
+
+p code:not(.sourceCode),
+li code:not(.sourceCode),
+td code:not(.sourceCode) {
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+}
+
+div.sourceCode,
+pre.sourceCode,
+.cell-output pre {
+  border: 0;
+  border-radius: 5px;
+}
+
+div.sourceCode {
+  background-color: $site-code-bg;
+  margin-block: 1.4em;
+}
+
+pre {
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+pre.sourceCode {
+  padding: 0.9rem 1.1rem;
+}
+
+/* Output of an executed cell: set apart from its source, no fill. */
+.cell-output pre {
+  background: transparent;
+  border-left: 2px solid $site-rule;
+  border-radius: 0;
+  padding: 0.2rem 0 0.2rem 1.1rem;
+  color: $site-secondary;
+}
+
+.code-copy-button {
+  opacity: 0.55;
+}
+
+/* A cell whose source is hidden (echo: false) has nothing to copy. */
+.code-copy-outer-scaffold:has(> .sourceCode.hidden) {
+  display: none;
+}
+
+/* Tables ----------------------------------------------------------------- */
+
+main.content table {
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums lining-nums;
+  border-top: 1px solid $site-rule;
+  border-bottom: 1px solid $site-rule;
+  margin-block: 1.6em;
+
+  th {
+    font-family: $font-ui;
+    font-size: 0.78rem;
+    font-weight: 600;
+    border-bottom: 1px solid $site-text;
+    vertical-align: bottom;
+  }
+
+  td,
+  th {
+    padding: 0.4rem 0.75rem;
+  }
+
+  > tbody > tr > td {
+    border-color: $site-rule;
+  }
+}
+
+/* A table wider than the text scrolls inside its own box instead of pushing
+   the whole page sideways on a phone. */
+main.content table.table {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* Figures ---------------------------------------------------------------- */
+
+figure {
+  margin-block: 1.8em;
+}
+
+figcaption,
+.figure-caption,
+caption {
+  font-family: $font-ui;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: $site-muted;
+  margin-top: 0.6rem;
+}
+
+/* Math ------------------------------------------------------------------- */
+
+/* Display math must never widen the page: a long equation scrolls inside its
+   own box instead of forcing horizontal scroll of the whole document. MathJax
+   puts an inline min-width on numbered and aligned equations, which only
+   !important can beat. The padding is the indent off the left margin. */
+mjx-container[display="true"] {
+  max-width: 100%;
+  min-width: 0 !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: 0.4em;
+  padding-inline-start: 1.5em;
+  margin-block: 1.1em !important;
+}
+
+@media (max-width: 575.98px) {
+  mjx-container[display="true"] {
+    padding-inline-start: 0;
+  }
+}
+
+span.math.display {
+  display: block;
+}
+
+/* An inline formula longer than the text column (see assets/head.html). */
+mjx-container.math-scroll {
+  display: inline-block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  vertical-align: middle;
+  padding-block: 0.3em;
+}
+
+/* Table of contents ------------------------------------------------------ */
+
+#TOC,
+nav[role="doc-toc"] {
+  font-family: $font-ui;
+
+  > h2,
+  #toc-title {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $site-muted;
+    border-bottom: 0;
+    margin-bottom: 0.6rem;
+  }
+
+  ul a {
+    color: $site-muted;
+    border-left: 1px solid $site-rule;
+    padding-block: 0.22rem;
+    line-height: 1.35;
+    text-decoration: none;
+
+    &:hover {
+      color: $site-text;
+    }
+
+    &.active {
+      color: $site-text;
+      border-left: 1px solid $site-text;
+    }
+  }
+}
+
+.sidebar nav[role="doc-toc"] ul > li > a.active,
+.sidebar nav[role="doc-toc"] ul > li > ul > li > a.active {
+  border-left: 1px solid $site-text;
+  color: $site-text !important;
+}
+
+/* Post index (assets/post-list.ejs) --------------------------------------- */
+
+.post-list {
+  margin-top: 0.5rem;
+}
+
+.post-list__year {
+  font-family: $font-ui;
+  font-size: 0.72rem !important;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: $site-muted;
+  font-variant-numeric: lining-nums;
+  margin: 2rem 0 0.5rem !important;
+  padding-bottom: 0.4rem !important;
+  border-bottom: 1px solid $site-rule !important;
+}
+
+.post-list__year:first-child {
+  margin-top: 0.5rem !important;
+}
+
+.post-list__item {
+  display: grid;
+  grid-template-columns: 4.2rem 1fr;
+  column-gap: 1rem;
+  align-items: baseline;
+  padding-block: 0.38rem;
+}
+
+.post-list__date {
+  font-family: $font-ui;
+  font-size: 0.78rem;
+  color: $site-muted;
+  font-variant-numeric: tabular-nums lining-nums;
+  white-space: nowrap;
+}
+
+main.content a.post-list__title {
+  color: $site-text;
+  font-size: 1.05rem;
+  line-height: 1.35;
+  text-decoration: none;
+
+  &:hover {
+    color: $site-accent;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+  }
+}
+
+.post-list-more {
+  font-family: $font-ui;
+  font-size: 0.82rem;
+  margin-top: 1.2rem;
+}
+
+/* Category filter in the margin of the blog index. */
+h5.quarto-listing-category-title {
+  font-family: $font-ui;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $site-muted;
+  border-bottom: 0;
+  margin-bottom: 0.4rem;
+}
+
+.quarto-listing-category {
+  font-family: $font-ui;
+
+  .category {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: $site-secondary;
+    padding-block: 0.12rem;
+
+    &.active,
+    &:hover {
+      color: $site-text;
+    }
+
+    &.active {
+      text-decoration: underline;
+      text-underline-offset: 0.3em;
+    }
+  }
+
+  .quarto-category-count {
+    color: $site-muted;
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+}
+
+/* Home page -------------------------------------------------------------- */
+
+.home-intro {
+  display: grid;
+  grid-template-columns: 104px 1fr;
+  column-gap: 1.6rem;
+  align-items: start;
+  margin-bottom: 2.8rem;
+
+  img {
+    width: 104px;
+    height: 104px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: 0.3rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    letter-spacing: -0.012em;
+    margin: 0 0 0.5rem;
+  }
+
+  p {
+    margin-bottom: 0.7em;
+  }
+
+  .home-meta {
+    font-family: $font-ui;
+    font-size: 0.82rem;
+    color: $site-muted;
+    margin-top: 1rem;
+
+    p {
+      margin: 0;
+    }
+
+    .home-location {
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    a {
+      margin-right: 0.9rem;
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    grid-template-columns: 1fr;
+    row-gap: 1rem;
+
+    img {
+      width: 84px;
+      height: 84px;
+    }
+  }
+}
+
+h2.home-section-title {
+  font-family: $font-ui;
+  font-size: 0.72rem !important;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $site-muted;
+  margin: 2.6rem 0 0.2rem !important;
+}
+
+/* PDF preview cards (assets/pdf-embed.lua) -------------------------------- */
+
+.pdf-embed {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 1.5em auto 2.5em;
+
+  figcaption {
+    text-align: center;
+  }
+}
+
+.pdf-embed__preview {
+  display: block;
+  border: 1px solid $site-rule;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+
+  &:hover {
+    border-color: $site-muted;
+  }
+
+  img {
+    display: block;
+    width: var(--pdf-w, auto);
+    max-width: 100%;
+    height: auto;
+    max-height: var(--pdf-h, 34rem);
+  }
+}
+
+/* Interactive blocks (Observable JS) -------------------------------------- */
+
+/* Sliders and number boxes sit in a quiet panel above the chart they drive. */
+.controls {
+  font-family: $font-ui;
+  font-size: 0.82rem;
+  padding: 0.8rem 1.1rem;
+  margin-block: 1.6em 1em;
+  border: 1px solid $site-rule;
+  border-radius: 5px;
+
+  form {
+    margin: 0;
+    --label-width: 8.5rem;
+    --input-width: calc(100% - var(--label-width));
+    width: 100%;
+    max-width: none;
+    font: inherit;
+    color: $site-secondary;
+  }
+
+  label {
+    color: $site-secondary;
+  }
+
+  input[type="number"] {
+    font: inherit;
+    font-variant-numeric: tabular-nums lining-nums;
+    color: $site-text;
+    background: transparent;
+    border: 1px solid $site-rule;
+    border-radius: 3px;
+    padding: 0.1rem 0.3rem;
+  }
+
+  input[type="range"] {
+    accent-color: $site-accent;
+  }
+}
+
+.chart {
+  font-family: $font-ui;
+  margin-block: 1em 2em;
+
+  h3 {
+    font-family: $font-ui;
+    font-size: 0.86rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    margin: 0 0 0.1rem !important;
+  }
+
+  .chart__sub {
+    font-size: 0.78rem;
+    color: $site-muted;
+    margin: 0 0 0.5rem;
+  }
+
+  svg {
+    font-family: $font-ui;
+    font-variant-numeric: tabular-nums lining-nums;
+    overflow: visible;
+  }
+}
+
+/* Headline numbers computed from the inputs. */
+.stats {
+  font-family: $font-ui;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 1rem 1.25rem;
+  margin-block: 1em 2em;
+
+  .stat__label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $site-muted;
+  }
+
+  .stat__value {
+    font-size: 1.35rem;
+    font-weight: 600;
+    line-height: 1.25;
+    font-variant-numeric: tabular-nums lining-nums;
+    color: $site-text;
+  }
+
+  .stat__note {
+    font-size: 0.75rem;
+    color: $site-muted;
+  }
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1rem;
+  font-size: 0.75rem;
+  color: $site-secondary;
+  margin-bottom: 0.4rem;
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  i {
+    display: inline-block;
+    width: 0.9rem;
+    height: 0;
+    border-top: 2px solid currentColor;
+  }
+}

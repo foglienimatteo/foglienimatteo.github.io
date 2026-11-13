@@ -1,0 +1,21 @@
+```{=html}
+<%
+// Compact post index: one line per post, date + title, grouped by year.
+// Used by blog/index.qmd (all posts) and index.qmd (the latest few).
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+let year = null;
+%>
+<div class="post-list list">
+<% for (const item of items) {
+     // `date-format: iso` in the listing options makes this YYYY-MM-DD.
+     const [y, m, d] = String(item.date).slice(0, 10).split("-");
+     if (y !== year) { year = y; %>
+  <h2 class="post-list__year"><%= y %></h2>
+<%   } %>
+  <div class="post-list__item" <%= metadataAttrs(item) %>>
+    <time class="post-list__date listing-date" datetime="<%= y %>-<%= m %>-<%= d %>"><%= months[Number(m) - 1] %> <%= Number(d) %></time>
+    <a class="post-list__title listing-title" href="<%- item.path %>"><%= item.title %></a>
+  </div>
+<% } %>
+</div>
+```

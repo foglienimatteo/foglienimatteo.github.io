@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Render page 1 of a PDF to a web-sized JPEG beside it, for use with
-# {% include pdf-embed.html %}.
+# the {{< pdf-embed >}} shortcode (assets/pdf-embed.lua).
 #
 #     bin/pdf-preview [-w WIDTH] [-q QUALITY] <file.pdf>
 #

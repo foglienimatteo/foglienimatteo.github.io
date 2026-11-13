@@ -1,0 +1,17 @@
+---
+title: "Blog"
+toc: false
+aliases:
+  - /Blogs/
+listing:
+  id: posts
+  contents: "*/index.qmd"
+  sort: "date desc"
+  date-format: iso
+  template: ../assets/post-list.ejs
+  categories: true
+  feed: true
+---
+
+::: {#posts}
+:::

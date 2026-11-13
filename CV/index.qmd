@@ -1,0 +1,12 @@
+---
+title: "CV"
+toc: false
+---
+
+{{< pdf-embed pdf="/assets/cv/2026-06-29_CV.pdf"
+              image="/assets/cv/2026-06-29_CV.jpg"
+              alt="Curriculum vitae of Matteo Foglieni"
+              caption="Updated June 2026"
+              width="36rem" >}}
+
+[Download the PDF](/assets/cv/2026-06-29_CV.pdf){download="Matteo-Foglieni-CV.pdf"}

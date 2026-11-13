@@ -1,0 +1,29 @@
+/*
+  Dark mode: the same theme with a different set of colours. Everything else
+  comes from site.scss.
+*/
+
+/*-- scss:defaults --*/
+
+$site-bg:        #1a1a19;
+$site-text:      #e9e7e2;
+$site-secondary: #c3c2b7;
+$site-muted:     #9a988f;
+$site-rule:      #34342f;
+$site-code-bg:   #232321;
+$site-accent:    #86b6ef;
+
+// In the dark the ramp runs the other way: the highest value is the lightest,
+// so "more" is still the colour that stands out most from the background.
+$chart-ramp: #184f95, #256abf, #3987e5, #6da7ec, #9ec5f4, #cde2fb;
+$chart-highlight: #d95926;
+
+/*-- scss:rules --*/
+
+/* Raster and SVG figures are drawn for a white page: give them one. */
+main.content figure > p > img,
+main.content .quarto-figure img,
+main.content p > img:not(.home-photo) {
+  background: #fff;
+  border-radius: 4px;
+}

@@ -1,32 +1,23 @@
-# Vim
+# Quarto: build output and cache. _freeze/ is NOT ignored - it holds the
+# stored output of executed code cells and must be committed.
+/.quarto/
+/_site/
+**/*.quarto_ipynb
+
+# Python / Jupyter
+__pycache__/
+.ipynb_checkpoints/
+
+# Editors
 *~
 *.sw[p_]
-
-# IntelliJ IDEA
 *.idea
-
-# Sublime Text
+.vscode/
 *.sublime-project
 *.sublime-workspace
-
-# Ruby Gem
-*.gem
-.bundle
-Gemfile.lock
-**/vendor/bundle
-
-# Node.js and NPM
-node_modules
-npm-debug.log*
-package-lock.json
-codekit-config.json
 
 # macOS
 .DS_Store
 
-# Jekyll generated files
-.jekyll-cache
-.jekyll-metadata
-.sass-cache
-_asset_bundler_cache
-_site
+# bin/pdf-preview scratch
+pdf-preview
