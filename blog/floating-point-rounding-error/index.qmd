@@ -2,6 +2,8 @@
 title: "Why 0.1 isn't 0.1: floating-point rounding error (part 1)"
 date: 2026-11-01
 categories: [math, computer science]
+execute:
+  echo: false
 ---
 
 References:
@@ -395,6 +397,155 @@ For example, an error of $70.8$ ulps (Section 4.1) contaminates $\log_{10} 70.8 
 
 The most natural way to measure the rounding error of a single operation is in ulps: rounding to the nearest floating-point number corresponds to an error of at most half an ulp. When analysing the rounding error caused by a formula, relative error is a better measure. Since $\varepsilon$ can overestimate the effect of rounding to the nearest floating-point number by the wobble factor $\beta$, error estimates of formulas are tighter on machines with a small $\beta$.
 
+
+### 2.5 Try it yourself
+
+Everything above is computed right here in your browser. Type a real number $x$, pick a base $\beta$ and a precision $p$, and the box rounds $x$ to the nearest number the format can hold and reports the error four ways. The defaults reproduce the $x = 12.35$ example of Section 2.3; switch to $\beta = 2$, $p = 24$ and type `0.1` to watch a number that looks exact in decimal fail to be representable in binary. Turn off *nearest* to compare $x$ against an $\tilde{x}$ you choose yourself (e.g. $x = 0.0314$, $\tilde{x} =$ `0.0312`, the two-ulp example of Section 2.1).
+
+::: {.controls}
+```{ojs}
+viewof xStr = Inputs.text({label: "Real number x", value: "12.35", submit: false, placeholder: "12.35, 0.1, 1/3, pi"})
+viewof beta = Inputs.radio(new Map([["2 (binary)", 2], ["10 (decimal)", 10], ["16 (hex)", 16]]), {value: 10, label: "Base β"})
+viewof p = Inputs.range([1, 53], {value: 3, step: 1, label: "Precision p"})
+viewof snap = Inputs.toggle({label: "x̃ = nearest representable value", value: true})
+viewof approxStr = Inputs.text({label: "…or set x̃ yourself", value: "0.0312", submit: false, disabled: snap})
+```
+:::
+
+```{ojs}
+parseReal = s => {
+  s = (s || "").trim().toLowerCase();
+  const named = { pi: Math.PI, "π": Math.PI, e: Math.E, sqrt2: Math.SQRT2, "√2": Math.SQRT2 };
+  if (s in named) return named[s];
+  if (/^[-+]?\d*\.?\d+(e[-+]?\d+)?$/.test(s)) return parseFloat(s);
+  const m = s.match(/^([-+]?\d*\.?\d+)\s*\/\s*([-+]?\d*\.?\d+)$/);
+  if (m) return parseFloat(m[1]) / parseFloat(m[2]);
+  return NaN;
+}
+exponentOf = (v, b) => {
+  const a = Math.abs(v);
+  let e = Math.floor(Math.log(a) / Math.log(b));
+  while (Math.pow(b, e) > a) e--;
+  while (Math.pow(b, e + 1) <= a) e++;
+  return e;
+}
+toFloat = (v, b, pr) => {
+  if (v === 0) return { xt: 0, e: 0, ulp: Math.pow(b, 1 - pr), digits: Array(pr).fill(0), sign: 1 };
+  const s = Math.sign(v), a = Math.abs(v);
+  let e = exponentOf(a, b), ulp = Math.pow(b, e - pr + 1);
+  const q = a / ulp, fl = Math.floor(q), fr = q - fl;
+  let n = fr < 0.5 ? fl : fr > 0.5 ? fl + 1 : (fl % 2 === 0 ? fl : fl + 1);
+  let xt = s * n * ulp;
+  if (Math.abs(xt) >= Math.pow(b, e + 1)) { e++; ulp = Math.pow(b, e - pr + 1); n = Math.round(Math.abs(xt) / ulp); }
+  const digits = []; let m = n;
+  for (let k = 0; k < pr; k++) { digits.unshift(m % b); m = Math.floor(m / b); }
+  return { xt, e, ulp, digits, sign: s };
+}
+hexd = d => d < 10 ? String(d) : "ABCDEF"[d - 10]
+fmt = (digits, e) => html`${hexd(digits[0])}${digits.length > 1 ? "." + digits.slice(1).map(hexd).join("") : ""} &times; ${beta}<sup>${e}</sup>`
+
+x = parseReal(xStr)
+isDec = s => /^[-+]?\d*\.?\d+$/.test((s || "").trim())
+// Exact base-10 rounding straight from the typed digits, so a halfway case
+// like 12.35 rounds to even (12.4) instead of being nudged off by the fact
+// that 12.35 is itself not representable as a double.
+round10 = (str, pr) => {
+  let s = str.trim(), sign = 1;
+  if (s[0] === "+") s = s.slice(1); else if (s[0] === "-") { sign = -1; s = s.slice(1); }
+  const dot = s.indexOf("."), ip = dot < 0 ? s : s.slice(0, dot), fp = dot < 0 ? "" : s.slice(dot + 1);
+  const raw = (ip + fp), allStr = raw.replace(/^0+/, "");
+  if (allStr === "") return { xt: 0, e: 0, ulp: Math.pow(10, 1 - pr), digits: Array(pr).fill(0), sign: 1 };
+  let e = ip.length - 1 - (raw.length - allStr.length);
+  const da = allStr.split("").map(Number);
+  let digits;
+  if (da.length <= pr) {
+    digits = da.concat(Array(pr - da.length).fill(0));
+  } else {
+    digits = da.slice(0, pr);
+    const dp = da[pr], restNonzero = da.slice(pr + 1).some(d => d > 0);
+    if (dp > 5 || (dp === 5 && (restNonzero || digits[pr - 1] % 2 === 1))) {
+      let k = pr - 1;
+      while (k >= 0) { if (++digits[k] < 10) break; digits[k] = 0; k--; }
+      if (k < 0) { digits.unshift(1); digits.pop(); e++; }
+    }
+  }
+  const eOut = e, ulp = Math.pow(10, eOut - pr + 1);
+  const xt = sign * digits.reduce((acc, d, k) => acc + d * Math.pow(10, eOut - k), 0);
+  return { xt, e: eOut, ulp, digits, sign };
+}
+floatOf = (val, str, b, pr) => (b === 10 && isDec(str)) ? round10(str, pr) : toFloat(val, b, pr)
+
+repX = isFinite(x) ? floatOf(x, xStr, beta, p) : null
+xApprox = snap ? null : parseReal(approxStr)
+repT = snap ? repX : (isFinite(xApprox) ? floatOf(xApprox, approxStr, beta, p) : null)
+xt = repT ? repT.xt : NaN
+eT = repT ? repT.e : 0
+ulp = repT ? repT.ulp : NaN
+aerr = Math.abs(xt - x)
+aerrUlps = aerr / ulp
+rerr = x === 0 ? NaN : aerr / Math.abs(x)
+eps = (beta / 2) * Math.pow(beta, -p)
+rerrEps = rerr / eps
+sci = v => !isFinite(v) ? "—" : v === 0 ? "0" : v.toExponential(2)
+tipF = ({ fill: "var(--site-bg)", stroke: "var(--site-muted)", fontSize: 12 })
+```
+
+```{ojs}
+!isFinite(x)
+  ? html`<p class="input-error">Couldn't read “${xStr}” — try a decimal like <code>12.35</code>, a fraction like <code>1/3</code>, or <code>pi</code>.</p>`
+  : !isFinite(xt)
+  ? html`<p class="input-error">Couldn't read the approximation “${approxStr}”.</p>`
+  : html`<div>
+    <div class="repr">${snap ? "Nearest representable value:" : "Comparing against:"}
+      &nbsp; <b>${xt < 0 ? "−" : ""}${fmt(repT.digits, eT)}</b>
+      &nbsp;=&nbsp; ${xt.toPrecision(Math.min(17, p + (beta === 10 ? 1 : 8)))}
+      ${aerr === 0 ? html` &nbsp;<span style="color:var(--chart-6)">(exact)</span>` : ""}</div>
+    <div class="stats">
+      <div><div class="stat__label">ulp[β, p, e]</div>
+           <div class="stat__value">${sci(ulp)}</div>
+           <div class="stat__note">β<sup>e−p+1</sup>, e = ${eT}</div></div>
+      <div><div class="stat__label">Absolute error</div>
+           <div class="stat__value">${aerr === 0 ? "0" : sci(aerr)}</div>
+           <div class="stat__note">${aerrUlps.toFixed(3)} ulps</div></div>
+      <div><div class="stat__label">Relative error</div>
+           <div class="stat__value">${x === 0 ? "—" : sci(rerr)}</div>
+           <div class="stat__note">${isFinite(rerrEps) ? rerrEps.toFixed(2) + " ε" : ""}</div></div>
+      <div><div class="stat__label">Machine epsilon ε</div>
+           <div class="stat__value">${sci(eps)}</div>
+           <div class="stat__note">(β/2) β<sup>−p</sup></div></div>
+      <div><div class="stat__label">Contaminated digits</div>
+           <div class="stat__value">${aerrUlps <= 1 ? "< 1" : (Math.log(aerrUlps) / Math.log(beta)).toFixed(2)}</div>
+           <div class="stat__note">≈ log<sub>β</sub>(ulps)</div></div>
+    </div>
+  </div>`
+```
+
+::: {.chart}
+```{ojs}
+isFinite(x) && isFinite(xt) && isFinite(ulp) ? (() => {
+  const span = Math.max(3.5 * ulp, 1.6 * aerr || ulp);
+  const dmin = xt - span, dmax = xt + span;
+  const nt = Math.round((dmax - dmin) / ulp);
+  const grid = nt <= 22
+    ? d3.range(Math.ceil((dmin - xt) / ulp), Math.floor((dmax - xt) / ulp) + 1).map(k => ({ v: xt + k * ulp }))
+    : [];
+  return Plot.plot({
+    width, height: 128, marginTop: 34, marginBottom: 32, marginLeft: 16, marginRight: 16,
+    x: { domain: [dmin, dmax], ticks: 5, tickFormat: v => v.toPrecision(4), label: null },
+    y: { domain: [-1, 1], axis: null },
+    marks: [
+      Plot.ruleY([0], { stroke: "var(--site-rule)" }),
+      grid.length ? Plot.ruleX(grid, { x: "v", y1: -0.22, y2: 0.22, stroke: "var(--chart-1)", strokeOpacity: 0.55 }) : null,
+      grid.length >= 2 ? Plot.text([{ v: xt + 0.5 * ulp }], { x: "v", y: 0.22, text: ["← 1 ulp →"], dy: -8, fill: "var(--site-muted)", fontSize: 11 }) : null,
+      Plot.dot([{ v: xt }], { x: "v", y: 0, r: 5, fill: "var(--chart-1)" }),
+      Plot.dot([{ v: x }], { x: "v", y: 0, r: 4, fill: "var(--chart-highlight)" }),
+      Plot.text([{ v: xt }], { x: "v", y: 0, text: ["x̃ (stored)"], dy: -17, fill: "var(--chart-1)", fontSize: 12 }),
+      Plot.text([{ v: x }], { x: "v", y: 0, text: ["x (real)"], dy: 19, fill: "var(--chart-highlight)", fontSize: 12 })
+    ]
+  });
+})() : html``
+```
+:::
 
 ## 3. Guard digits
 
