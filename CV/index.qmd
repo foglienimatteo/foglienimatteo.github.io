@@ -3,10 +3,71 @@ title: "CV"
 toc: false
 ---
 
+[HPC & Cloud Specialist at the Leibniz Supercomputing Centre in Munich. Physics background, Julia enthusiast.]{.cv-intro}
+
+[Download as PDF ↗](/assets/cv/2026-06-29_CV.pdf){.cv-download download="Matteo-Foglieni-CV.pdf"}
+
+## Experience
+
+:::: {.cv-item}
+::: {.cv-item__head}
+[HPC & Cloud Specialist]{.cv-item__role}[Oct 2022 – present]{.cv-item__dates}
+:::
+::: {.cv-item__org}
+[Leibniz Supercomputing Centre (LRZ)]{.cv-item__place}[Garching bei München, DE]{.cv-item__loc}
+:::
+
+- Administered and maintained 5+ clusters of Rocky and Ubuntu virtual machines on the LRZ OpenStack Compute Cloud, provisioning scalable environments for teaching and research.
+- Automated infrastructure deployment and configuration management with Ansible, Terraform and Magic Castle.
+- Managed Kubernetes clusters (RKE/RKE2 with Docker/containerd as container runtime) via Rancher Fleet for CI/CD.
+- Set up Apache2, ufw and a Caddy reverse proxy, with automated SSL certificates via ACME and Certbot.
+- Configured custom Jupyter IDE containers integrated with XFS and NFS for persistent user storage.
+- Maintained 2 Slurm clusters, overseeing software-stack provisioning via Spack, EESSI and Conda environments.
+- Applied Julia's KernelAbstractions.jl for backend-agnostic GPU offloading in GaPSE.jl.
+- Worked with High-Performance Computing paradigms (OpenMP, MPI) and hardware architectures (e.g. ccNUMA domains).
+- Troubleshot network configurations with netcat, Wireshark and tcptraceroute.
+- Main LRZ instructor for the course *Introduction to Julia* (Jun 2026).
+- Supported dozens of training courses hosted on these clusters, with 10 to 70 participants each.
+::::
+
+## Education
+
+:::: {.cv-item}
+::: {.cv-item__head}
+[Master's Degree in Physics · 110/110 cum laude]{.cv-item__role}[Sept 2019 – July 2022]{.cv-item__dates}
+:::
+::: {.cv-item__org}
+[University of Milan]{.cv-item__place}[Milan, IT]{.cv-item__loc}
+:::
+
+- **Thesis:** *The Galaxy Number Counts in General Relativity: implications for Primordial Non-Gaussianities* — developed the Julia code [GaPSE.jl](https://github.com/foglienimatteo/GaPSE.jl).
+- **Relevant coursework:** implemented ray-tracing software for photorealistic image generation.
+- **Data analysis:** Bayesian inference and Markov-Chain Monte Carlo methods in Python with the `emcee` package.
+::::
+
+:::: {.cv-item}
+::: {.cv-item__head}
+[Bachelor's Degree in Physics · 110/110 cum laude]{.cv-item__role}[Sept 2016 – Dec 2019]{.cv-item__dates}
+:::
+::: {.cv-item__org}
+[University of Milan]{.cv-item__place}[Milan, IT]{.cv-item__loc}
+:::
+
+- **Thesis:** *Evaluation of the Two-Point Correlation Function in cosmological simulations* — computed astrophysical metrics in C++ leveraging STL containers.
+::::
+
+## Languages
+
+[Italian — native  ·  English — fluent (C1)  ·  German — intermediate (B1/B2)]{.cv-langs}
+
+Publications and talks are on the [Publications](../Publications/index.qmd) page.
+
+---
+
+Prefer the original one-page layout? Here it is — click the preview to open it full size in a new tab, or [download the PDF](/assets/cv/2026-06-29_CV.pdf){download="Matteo-Foglieni-CV.pdf"}.
+
 {{< pdf-embed pdf="/assets/cv/2026-06-29_CV.pdf"
               image="/assets/cv/2026-06-29_CV.jpg"
               alt="Curriculum vitae of Matteo Foglieni"
               caption="Updated June 2026"
-              width="36rem" >}}
-
-[Download the PDF](/assets/cv/2026-06-29_CV.pdf){download="Matteo-Foglieni-CV.pdf"}
+              width="22rem" >}}

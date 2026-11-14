@@ -685,6 +685,99 @@ h2.home-section-title {
   margin: 2.6rem 0 0.2rem !important;
 }
 
+/* CV page ----------------------------------------------------------------- */
+
+.cv-intro {
+  display: block;
+  font-family: $font-ui;
+  font-size: 0.95rem;
+  color: $site-secondary;
+  margin-bottom: 1rem;
+}
+
+main.content a.cv-download {
+  display: inline-block;
+  font-family: $font-ui;
+  font-size: 0.82rem;
+  color: $site-text;
+  text-decoration: none;
+  border: 1px solid $site-rule;
+  border-radius: 5px;
+  padding: 0.32rem 0.85rem;
+  margin-bottom: 2rem;
+
+  &:hover {
+    border-color: $site-muted;
+    text-decoration: none;
+  }
+}
+
+.cv-item {
+  margin-block: 1.5rem;
+  padding-bottom: 1.3rem;
+  border-bottom: 1px solid $site-rule;
+}
+
+main.content .cv-item:last-of-type {
+  border-bottom: 0;
+}
+
+.cv-item__head > p,
+.cv-item__org > p {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.2rem 1.25rem;
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+.cv-item__org > p {
+  margin-top: 0.1rem;
+  margin-bottom: 0.3rem;
+}
+
+.cv-item__role {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: $site-text;
+}
+
+.cv-item__dates {
+  font-family: $font-ui;
+  font-size: 0.78rem;
+  color: $site-muted;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.cv-item__place {
+  font-family: $font-ui;
+  font-size: 0.9rem;
+  color: $site-secondary;
+}
+
+.cv-item__loc {
+  font-family: $font-ui;
+  font-size: 0.78rem;
+  color: $site-muted;
+}
+
+.cv-item ul {
+  margin-top: 0.45rem;
+  margin-bottom: 0;
+}
+
+main.content .cv-item li {
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+}
+
+.cv-langs {
+  display: block;
+  font-family: $font-ui;
+  color: $site-secondary;
+}
+
 /* PDF preview cards (assets/pdf-embed.lua) -------------------------------- */
 
 .pdf-embed {
