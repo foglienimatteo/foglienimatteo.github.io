@@ -773,9 +773,29 @@ main.content .cv-item li {
 }
 
 .cv-langs {
-  display: block;
   font-family: $font-ui;
+  margin-top: 0.3rem;
+
+  p {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    gap: 0.4rem;
+    margin: 0.18rem 0;
+  }
+}
+
+.cv-lang {
+  font-weight: 600;
+  color: $site-text;
+}
+
+.cv-level {
   color: $site-secondary;
+}
+
+/* A bit more breathing room before each CV section (Education, Languages). */
+main.content .cv-item + h2 {
+  margin-top: 3.3em;
 }
 
 /* PDF preview cards (assets/pdf-embed.lua) -------------------------------- */

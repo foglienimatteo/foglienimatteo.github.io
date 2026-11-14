@@ -17,17 +17,12 @@ toc: false
 [Leibniz Supercomputing Centre (LRZ)]{.cv-item__place}[Garching bei München, DE]{.cv-item__loc}
 :::
 
-- Administered and maintained 5+ clusters of Rocky and Ubuntu virtual machines on the LRZ OpenStack Compute Cloud, provisioning scalable environments for teaching and research.
-- Automated infrastructure deployment and configuration management with Ansible, Terraform and Magic Castle.
-- Managed Kubernetes clusters (RKE/RKE2 with Docker/containerd as container runtime) via Rancher Fleet for CI/CD.
-- Set up Apache2, ufw and a Caddy reverse proxy, with automated SSL certificates via ACME and Certbot.
-- Configured custom Jupyter IDE containers integrated with XFS and NFS for persistent user storage.
-- Maintained 2 Slurm clusters, overseeing software-stack provisioning via Spack, EESSI and Conda environments.
-- Applied Julia's KernelAbstractions.jl for backend-agnostic GPU offloading in GaPSE.jl.
-- Worked with High-Performance Computing paradigms (OpenMP, MPI) and hardware architectures (e.g. ccNUMA domains).
-- Troubleshot network configurations with netcat, Wireshark and tcptraceroute.
-- Main LRZ instructor for the course *Introduction to Julia* (Jun 2026).
-- Supported dozens of training courses hosted on these clusters, with 10 to 70 participants each.
+- Ran 5+ Rocky/Ubuntu VM clusters and 2 Slurm clusters on the LRZ OpenStack cloud, provisioning software stacks with Spack, EESSI and Conda for teaching and research.
+- Automated deployment and configuration with Ansible, Terraform and Magic Castle.
+- Operated Kubernetes (RKE/RKE2) via Rancher Fleet for CI/CD, behind Caddy and Apache2 reverse proxies with automatic SSL (ACME, Certbot).
+- Built custom Jupyter IDE containers with persistent XFS/NFS storage for users.
+- Added backend-agnostic GPU offloading to the Julia code GaPSE.jl with KernelAbstractions.jl.
+- Lead instructor for the LRZ *Introduction to Julia* course, and supported dozens of training courses with 10 to 70 participants each.
 ::::
 
 ## Education
@@ -58,7 +53,13 @@ toc: false
 
 ## Languages
 
-[Italian — native  ·  English — fluent (C1)  ·  German — intermediate (B1/B2)]{.cv-langs}
+::: {.cv-langs}
+[Italian]{.cv-lang}[Native]{.cv-level}
+
+[English]{.cv-lang}[Fluent (C1)]{.cv-level}
+
+[German]{.cv-lang}[Intermediate (B1/B2)]{.cv-level}
+:::
 
 Publications and talks are on the [Publications](../Publications/index.qmd) page.
 
