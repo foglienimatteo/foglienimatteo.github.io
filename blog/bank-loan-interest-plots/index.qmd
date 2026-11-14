@@ -6,7 +6,13 @@ execute:
   echo: false
 ---
 
-Here some plots showing the interests you pay to a bank. They are interactive: change the loan, the installment and the interest rate and the curves follow; hover a curve to read its values.
+Here are some interactive plots of what a loan actually costs you. Most of a loan's
+early payments are almost all interest, with only a trickle going to the principal;
+the balance tips the other way only later on. Pick a loan and a rate below, then
+either set the monthly installment and read off how long you will be paying, or set
+the term and get the installment it implies. The curves and the summary follow as you
+drag, and hovering a curve reads off its values.
+
 Notation:
 
 - $D$ : loan amount
@@ -30,13 +36,24 @@ The formulas used here are derived in [Bank interest functions: analytical deriv
 ::: {.controls}
 ```{ojs}
 viewof D = Inputs.range([10000, 500000], {value: 100000, step: 1000, label: "Loan D [€]"})
-viewof R = Inputs.range([100, 5000], {value: 500, step: 10, label: "Installment R [€]"})
 viewof I = Inputs.range([0.1, 10], {value: 3, step: 0.1, label: "Annual rate I [%]"})
+viewof mode = Inputs.radio(new Map([["set the monthly installment", "R"], ["set the term", "N"]]), {value: "R", label: "I want to"})
+viewof RN = mode === "R"
+  ? Inputs.range([100, 5000], {value: 500, step: 10, label: "Installment R [€]"})
+  : Inputs.range([1, 40], {value: 20, step: 1, label: "Term [years]"})
 ```
 :::
 
 ```{ojs}
 // ---- the model: everything follows from D, R and the monthly rate i = I/12 ----
+
+// In "term" mode the monthly installment is whatever clears the loan in the
+// chosen number of years; in "installment" mode it is the slider value.
+installmentForTerm = (D, I, years) => {
+  const i = I / 1200, N = Math.round(years * 12);
+  return i === 0 ? D / N : i * Math.pow(1 + i, N) / (Math.pow(1 + i, N) - 1) * D;
+}
+R = mode === "R" ? RN : installmentForTerm(D, I, RN)
 
 // Does the installment cover at least the first month of interest?
 amortizes = (D, R, I) => R > (I / 1200) * D
@@ -78,6 +95,9 @@ mine = loan(D, R, I)
 ```{ojs}
 mine
   ? html`<div class="stats">
+      ${mode === "N" ? html`<div><div class="stat__label">Monthly installment</div>
+           <div class="stat__value">${eur(R)}</div>
+           <div class="stat__note">to clear it in ${RN} years</div></div>` : ""}
       <div><div class="stat__label">Installments</div>
            <div class="stat__value">${mine.N}</div>
            <div class="stat__note">${(mine.N / 12).toFixed(1)} years</div></div>
