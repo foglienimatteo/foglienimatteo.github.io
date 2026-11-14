@@ -1,5 +1,5 @@
 ---
-title: "Spline implementation in Julia from scratch"
+title: "Rolling my own cubic spline (because Dierckx wouldn't run on the GPU)"
 date: 2025-04-26
 categories: [math, physics]
 ---

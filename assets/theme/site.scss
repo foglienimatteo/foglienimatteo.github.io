@@ -780,6 +780,10 @@ h2.home-section-title {
     font-family: $font-ui;
     font-variant-numeric: tabular-nums lining-nums;
     overflow: visible;
+    /* Observable Plot injects `background: white` on some of its SVGs (any
+       plot built with a built-in legend). Keep every chart on the page's own
+       background so dark mode is not broken by a white box. */
+    background: transparent !important;
   }
 }
 

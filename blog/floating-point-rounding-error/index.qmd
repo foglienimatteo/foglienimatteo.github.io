@@ -1,5 +1,5 @@
 ---
-title: "Floating-point arithmetic, part 1: rounding error"
+title: "Why 0.1 isn't 0.1: floating-point rounding error (part 1)"
 date: 2026-11-01
 categories: [math, computer science]
 ---

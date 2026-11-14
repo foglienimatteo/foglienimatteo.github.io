@@ -1,7 +1,9 @@
 ---
-title: "Numerov's method"
+title: "Numerov's method: solving y″ = f without the first derivative"
 date: 2026-10-14
 categories: [math, physics]
+execute:
+  echo: false
 ---
 
 References: 
@@ -553,3 +555,163 @@ Test problem: $V(x) = -(1 + x)$ and $U(x) = y'' - V\,y$ chosen so that the exact
 | Eq.(3.3), sign corrected       | $h^4$          | $h^3$                   |
 | Eq.(3.8)                       | $h^5$          | $h^4$                   |
 
+
+
+## 4. See the orders for yourself
+
+The table above is really a set of claims about how fast the error shrinks as the grid is refined. Here they are, live — the method runs in your browser. Pick a test problem, choose how the first step $y_1$ is seeded, and slide the number of intervals $N$ (so the step is $h = (x_N - x_0)/N$). The orange dots are the Numerov solution, the grey line the exact one.
+
+::: {.controls}
+```{ojs}
+viewof prob = Inputs.select(new Map(Object.entries(problems).map(([k, v]) => [v.label, k])), {label: "Problem"})
+viewof starter = Inputs.radio(new Map(Object.entries(starters).map(([k, v]) => [v.label, k])), {value: "eq38", label: "Seed y₁ with"})
+viewof N = Inputs.range([10, 2000], {value: 200, step: 10, label: "Intervals N"})
+```
+:::
+
+```{ojs}
+// ---- test problems: y'' = U(x) + V(x) y, each with a known exact solution ----
+// U is reconstructed from the exact y and the chosen V as U = y'' - V y, so the
+// grid never sees the exact solution except to measure the error against it.
+problems = ({
+  post: {
+    label: "Post's test problem",
+    x0: 0, x1: 2, y0: 1, y0p: 0.5,
+    V: x => -(1 + x),
+    exact: x => Math.exp(x / 2) * Math.cos(2 * x) + x * x,
+    d2:    x => Math.exp(x / 2) * (-(15 / 4) * Math.cos(2 * x) - 2 * Math.sin(2 * x)) + 2
+  },
+  osc: {
+    label: "Oscillator  y'' = -y",
+    x0: 0, x1: 6 * Math.PI, y0: 0, y0p: 1,
+    V: x => -1,
+    exact: x => Math.sin(x),
+    d2:    x => -Math.sin(x)
+  }
+})
+Uof = p => x => p.d2(x) - p.V(x) * p.exact(x)
+
+// ---- three ways to seed y1, of increasing order (Sections 3.1-3.2) ----
+starters = ({
+  naive: { label: "naive: y₁ = y₀ + h y₀′",
+    y1: (p, U, h) => p.y0 + h * p.y0p },
+  eq33: { label: "Eq. (3.3)",
+    y1: (p, U, h) => {
+      const x0 = p.x0, x1 = x0 + h;
+      const F0 = U(x0) + p.V(x0) * p.y0, U1 = U(x1), V1 = p.V(x1);
+      return (p.y0 + h * p.y0p + (h * h / 6) * (U1 + 2 * F0)) / (1 - V1 * h * h / 6);
+    } },
+  eq38: { label: "Eq. (3.8)",
+    y1: (p, U, h) => {
+      const x0 = p.x0, x1 = x0 + h, x2 = x0 + 2 * h;
+      const F0 = U(x0) + p.V(x0) * p.y0, U1 = U(x1), U2 = U(x2), V1 = p.V(x1), V2 = p.V(x2);
+      const num = p.y0 * (1 - V2 * h * h / 24) + h * p.y0p * (1 - V2 * h * h / 12)
+                + (h * h / 24) * (7 * F0 + 6 * U1 - U2) - (h * h * h * h * V2 / 36) * (F0 + 2 * U1);
+      const den = 1 - V1 * h * h / 4 + V1 * V2 * h * h * h * h / 18;
+      return num / den;
+    } }
+})
+
+// ---- the Numerov recursion, Eq. (2.8) ----
+function integrate(p, U, key, N) {
+  const h = (p.x1 - p.x0) / N, V = p.V, xf = n => p.x0 + n * h;
+  const y = new Array(N + 1);
+  y[0] = p.y0;
+  y[1] = starters[key].y1(p, U, h);
+  for (let n = 1; n < N; n++) {
+    const Fn  = U(xf(n))     + V(xf(n))     * y[n];
+    const Fnm = U(xf(n - 1)) + V(xf(n - 1)) * y[n - 1];
+    y[n + 1] = (2 * y[n] - y[n - 1] + (h * h / 12) * (U(xf(n + 1)) + 10 * Fn + Fnm))
+             / (1 - V(xf(n + 1)) * h * h / 12);
+  }
+  return { h, xf, y };
+}
+
+function errorOf(p, U, key, N) {
+  const { y, xf } = integrate(p, U, key, N);
+  let maxerr = 0, maxabs = 0;
+  for (let n = 0; n <= N; n++) {
+    maxerr = Math.max(maxerr, Math.abs(y[n] - p.exact(xf(n))));
+    maxabs = Math.max(maxabs, Math.abs(p.exact(xf(n))));
+  }
+  return { abs: maxerr, rel: maxerr / maxabs };
+}
+
+P = problems[prob]
+U = Uof(P)
+run = integrate(P, U, starter, N)
+err = errorOf(P, U, starter, N)
+pObs = Math.log(err.abs / errorOf(P, U, starter, 2 * N).abs) / Math.log(2)
+```
+
+```{ojs}
+html`<div class="stats">
+  <div><div class="stat__label">Step h</div>
+       <div class="stat__value">${run.h.toFixed(4)}</div>
+       <div class="stat__note">${N} intervals</div></div>
+  <div><div class="stat__label">Max absolute error</div>
+       <div class="stat__value">${err.abs.toExponential(1)}</div></div>
+  <div><div class="stat__label">Max relative error</div>
+       <div class="stat__value">${err.rel.toExponential(1)}</div>
+       <div class="stat__note">in the max norm</div></div>
+  <div><div class="stat__label">Observed order p</div>
+       <div class="stat__value">${isFinite(pObs) ? pObs.toFixed(2) : "—"}</div>
+       <div class="stat__note">error ∝ hᵖ, from N vs 2N</div></div>
+</div>`
+```
+
+::: {.chart}
+```{ojs}
+html`<div class="chart-legend">
+  <span><i style="color:var(--site-muted)"></i>exact</span>
+  <span><i style="color:var(--chart-highlight)"></i>Numerov</span>
+</div>`
+```
+
+```{ojs}
+dataA = {
+  const { xf, y } = run, step = Math.max(1, Math.floor(N / 220)), pts = [];
+  for (let n = 0; n <= N; n += step) pts.push({ x: xf(n), num: y[n], exact: P.exact(xf(n)) });
+  const fine = []; for (let i = 0; i <= 400; i++) { const x = P.x0 + (P.x1 - P.x0) * i / 400; fine.push({ x, exact: P.exact(x) }); }
+  return { pts, fine };
+}
+Plot.plot({
+  width, height: 300, marginLeft: 52, marginTop: 12,
+  x: { label: "x →", nice: true },
+  y: { label: "↑ y", grid: true },
+  marks: [
+    Plot.line(dataA.fine, { x: "x", y: "exact", stroke: "var(--site-muted)", strokeWidth: 1.5 }),
+    Plot.dot(dataA.pts, { x: "x", y: "num", r: 2.4, fill: "var(--chart-highlight)" }),
+    Plot.tip(dataA.pts, Plot.pointerX({ x: "x", y: "num", ...tipStyleN,
+      title: d => `x = ${d.x.toFixed(3)}\nNumerov ${d.num.toFixed(5)}\nexact   ${d.exact.toFixed(5)}\n|error| ${Math.abs(d.num - d.exact).toExponential(2)}` }))
+  ]
+})
+tipStyleN = ({ fill: "var(--site-bg)", stroke: "var(--site-muted)", fontSize: 12 })
+```
+:::
+
+The real payoff is the next plot. It runs each of the three starting formulas over a whole range of step sizes and plots the error against $h$ on log–log axes, where a method of order $p$ shows up as a straight line of slope $p$. The naive first step drags the whole scheme down to first order; Eq. (3.3) gives third order; only Eq. (3.8) keeps the full fourth order the recursion is capable of — the three claims of the table. At the smallest steps the fourth-order line bends and flattens: that is rounding error, the subject of [another post](../floating-point-rounding-error/index.qmd), hitting its floor — not the method failing.
+
+::: {.chart}
+```{ojs}
+conv = {
+  const Ns = [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096], rows = [];
+  for (const key of Object.keys(starters))
+    for (const n of Ns)
+      rows.push({ h: (P.x1 - P.x0) / n, err: Math.max(errorOf(P, U, key, n).abs, 1e-18), starter: starters[key].label });
+  return rows;
+}
+Plot.plot({
+  width, height: 360, marginLeft: 64, marginTop: 12, marginBottom: 44,
+  x: { type: "log", label: "step h →  (coarse → fine)", reverse: true },
+  y: { type: "log", label: "↑ max absolute error", grid: true },
+  color: { domain: Object.values(starters).map(s => s.label),
+           range: ["var(--chart-2)", "var(--chart-4)", "var(--chart-6)"], legend: true },
+  marks: [
+    Plot.line(conv, { x: "h", y: "err", stroke: "starter", strokeWidth: 2, marker: "circle" }),
+    Plot.tip(conv, Plot.pointer({ x: "h", y: "err", stroke: "starter", ...tipStyleN,
+      title: d => `${d.starter}\nh = ${d.h.toExponential(2)}\nerror ${d.err.toExponential(2)}` }))
+  ]
+})
+```
+:::

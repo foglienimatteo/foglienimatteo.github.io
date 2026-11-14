@@ -1,5 +1,5 @@
 ---
-title: "Bank interest functions: analytical derivation"
+title: "The algebra of a loan: where the amortization formulas come from"
 date: 2026-10-18
 categories: [math]
 ---

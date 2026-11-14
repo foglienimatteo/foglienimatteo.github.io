@@ -1,5 +1,5 @@
 ---
-title: "Bank interest functions: plots"
+title: "What a loan really costs you"
 date: 2026-10-18
 categories: [math]
 execute:
